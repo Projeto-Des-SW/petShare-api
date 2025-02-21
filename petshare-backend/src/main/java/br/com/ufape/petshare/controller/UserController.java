@@ -1,6 +1,6 @@
 package br.com.ufape.petshare.controller;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +28,17 @@ public class UserController {
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
     }
+    
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/email/{email}")
