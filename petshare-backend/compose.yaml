@@ -1,9 +1,50 @@
+version: '3.8'
 services:
   postgres:
     image: 'postgres:latest'
+    container_name: petshare-postgres
+    restart: always
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=petshare_db' 
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=admin'
     ports:
-      - '5432'
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: petshare-keycloak
+    restart: always
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/petshare_db
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=admin
+      - KC_HOSTNAME=localhost
+    command: ["start-dev"]
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+  backend:
+    build: .
+    container_name: petshare-backend
+    restart: always
+    depends_on:
+      - postgres
+      - keycloak
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/petshare_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - KEYCLOAK_URL=http://keycloak:8080
+    ports:
+      - "8181:8181"
+
+volumes:
+  postgres_data:
