@@ -17,3 +17,6 @@ jobs:
 
       - name: Exibir mensagem
         run: echo "Oi teste"
+
+      - name: Build da imagem
+        run: echo "aqui vai ser o local de build"
