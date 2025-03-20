@@ -1,0 +1,32 @@
+name: Security SAST Scan
+
+on:
+  push:
+    branches:
+      - feature/SAST
+  pull_request:
+    branches:
+      - main
+      - feature/SAST
+
+jobs:
+  semgrep_scan:
+    name: Semgrep SAST Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Run Semgrep Security Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "p/default"
+        
+
+      - name: Fail if vulnerabilities are found
+        run: | 
+          if grep -q "ERROR" semgrep.log; then
+            echo "Vulnerabilidade de código encontrada. Pipeline falhando..."
+            exit 1
+          fi
+        continue-on-error: false
