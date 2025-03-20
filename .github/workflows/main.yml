@@ -24,10 +24,15 @@ jobs:
       - name: Build with Maven
         run: mvn clean compile -f petshare-backend/pom.xml
 
-      - name: Set SonarScanner Environment Variables
-        run: echo "SONAR_SCANNER_OPTS=-Dsonar.java.binaries=petshare-backend/target/classes" >> $GITHUB_ENV
+      - name: Create SonarQube Properties File
+        run: |
+          echo "sonar.projectKey=petShare-api" > sonar-project.properties
+          echo "sonar.sources=petshare-backend/src" >> sonar-project.properties
+          echo "sonar.java.binaries=petshare-backend/target/classes" >> sonar-project.properties
 
       - name: Sonarless Scan
         uses: gitricko/sonarless@v1.2
         with:
+          sonar-project-name: 'petShare-api'
+          sonar-project-key: 'petShare-api'
           sonar-source-path: 'petshare-backend/src'
