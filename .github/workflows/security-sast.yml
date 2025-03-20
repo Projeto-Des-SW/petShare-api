@@ -20,7 +20,7 @@ jobs:
       - name: Run Semgrep Security Scan
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "p/security p/java p/secrets"
+          config: "p/ci p/java p/secrets"
           audit-on: all
         
 
