@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Semgrep Security Scan
-        run: semgrep scan --sarif --config auto ./petshare-backend/src > semgrep-results.sarif
+        run: semgrep scan --verbose --sarif --config auto ./petshare-backend/src > semgrep-results.sarif
 
       - name: Save SARIF results as artifact
         uses: actions/upload-artifact@v3
