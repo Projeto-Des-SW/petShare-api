@@ -2,18 +2,19 @@ name: Security SAST Scan
 
 on:
   pull_request: {}  
-  workflow_dispatch: {}  
+  workflow_dispatch: {} 
   push:
-    branches: ["feature/SAST"] 
+    branches: ["feature/SAST"]
 
 jobs:
   semgrep_scan:
     name: Semgrep SAST Analysis
     runs-on: ubuntu-latest
     container:
-      image: returntocorp/semgrep
+      image: returntocorp/semgrep 
     permissions:
       security-events: write  
+      actions: read
       contents: read
 
     steps:
