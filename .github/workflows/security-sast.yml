@@ -20,8 +20,8 @@ jobs:
       - name: Run Semgrep Security Scan
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "p/ci p/java p/secrets"
-          audit-on: all
+          config: "p/default p/java p/secrets p/r2c-security-audit p/r2c-java"
+          args: "--json --output=semgrep-results.json --no-git-ignore"
         
 
       - name: Fail if vulnerabilities are found
