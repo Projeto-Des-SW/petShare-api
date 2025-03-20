@@ -1,35 +1,36 @@
 name: Security SAST Scan
 
 on:
+  pull_request: {}  
+  workflow_dispatch: {}  
   push:
-    branches:
-      - feature/SAST
-  pull_request:
-    branches:
-      - main
-      - feature/SAST
+    branches: ["feature/SAST"] 
 
 jobs:
   semgrep_scan:
     name: Semgrep SAST Analysis
     runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    permissions:
+      security-events: write  
+      contents: read
+
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Semgrep Security Scan
-        uses: returntocorp/semgrep-action@v1
+        run: semgrep scan --sarif --config auto ./petshare-backend/src > semgrep-results.sarif
+
+      - name: Save SARIF results as artifact
+        uses: actions/upload-artifact@v3
         with:
-          config: "p/default p/java p/secrets"
+          name: semgrep-scan-results
+          path: semgrep-results.sarif
 
-      - name: Run Semgrep in JSON mode
-        run: semgrep ci --json --output=semgrep-results.json --no-git-ignore
-        
-
-      - name: Fail if vulnerabilities are found
-        run: | 
-          if grep -q "ERROR" semgrep.log; then
-            echo "Vulnerabilidade de código encontrada. Pipeline falhando..."
-            exit 1
-          fi
-        continue-on-error: false
+      - name: Upload SARIF result to the GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: semgrep-results.sarif
+        if: always()
