@@ -39,3 +39,8 @@ jobs:
           sonar-project-name: 'petShare-api'
           sonar-project-key: 'petShare-api'
           sonar-source-path: 'petshare-backend/src'
+
+      - name: Vulnerabilities
+        run: |
+          echo "Resumo da análise"
+          cat sonar-metrics.json
