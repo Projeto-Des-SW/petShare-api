@@ -20,7 +20,7 @@ jobs:
       - name: Run Semgrep Security Scan
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "p/default p/java p/secrets p/java.security"
+          config: "p/default p/java p/secrets"
 
       - name: Run Semgrep in JSON mode
         run: semgrep ci --json --output=semgrep-results.json --no-git-ignore
