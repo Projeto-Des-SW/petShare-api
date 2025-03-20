@@ -29,7 +29,10 @@ jobs:
           echo "sonar.projectKey=petShare-api" > sonar-project.properties
           echo "sonar.sources=petshare-backend/src" >> sonar-project.properties
           echo "sonar.java.binaries=petshare-backend/target/classes" >> sonar-project.properties
-
+      
+      - name: Fetch all Git history
+        run: git fetch --unshallow
+      
       - name: Sonarless Scan
         uses: gitricko/sonarless@v1.2
         with:
