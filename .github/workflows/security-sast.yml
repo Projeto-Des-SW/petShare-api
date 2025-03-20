@@ -21,7 +21,9 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/default p/java p/secrets p/r2c-security-audit p/r2c-java"
-          args: "--json --output=semgrep-results.json --no-git-ignore"
+
+      - name: Run Semgrep in JSON mode
+        run: semgrep ci --json --output=semgrep-results.json --no-git-ignore
         
 
       - name: Fail if vulnerabilities are found
