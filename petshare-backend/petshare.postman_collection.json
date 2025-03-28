@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "45c290f7-ca4e-4dce-b978-69763724af49",
+		"name": "petshare",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37591868"
+	},
+	"item": [
+		{
+			"name": "Login User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJfcDFQZDVHZjBuRFpoQTVpbEU5LUpwd19MZ2FObnhHRE9VMU1EbWJhVk1RIn0.eyJleHAiOjE3NDI0MDI1NDQsImlhdCI6MTc0MjQwMjI0NCwianRpIjoiZTBlOTYwNmYtNmJhYy00NDAyLTk4N2YtZTJkYTMwZTJkZGZkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9wZXRzaGFyZSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI3NGFjMTg0Zi1mOTAzLTRkODUtOTk5My04MmIzMmJlOTlkODgiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJwZXRzaGFyZS1iYWNrZW5kIiwic2Vzc2lvbl9zdGF0ZSI6IjM5NGFjMTkxLWE2NjItNGM1YS05NWQ0LTE2NDk5YzBmNGYwOSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1wZXRzaGFyZSIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicGV0c2hhcmUtYmFja2VuZCI6eyJyb2xlcyI6WyJVU0VSIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiIzOTRhYzE5MS1hNjYyLTRjNWEtOTVkNC0xNjQ5OWMwZjRmMDkiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJVc2VyIFBldHNoYXJlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidXNlcl9wZXRzaGFyZSIsImdpdmVuX25hbWUiOiJVc2VyIiwiZmFtaWx5X25hbWUiOiJQZXRzaGFyZSJ9.UtaD7LznwQaPpLZxWn3zctVzHjSwH3PIQX_aYG_gYxgnX1CquE3DZtk9xZiUZzNdGIrBWUTl3G2muVAE2snBsFpVjTb5pdgv3B9We4LpxoMPjbynqyefUtjn_JvHAUbubFfMhcYKn4RvjYysiM4Ewc58PRlfgTHXop3qQuR7K0XBqtM38Qh7WJCxbh8_pJi_E4ZJJO8MGIL_wJdIPZb2PSMTnFgvYNJA70DiQD0ksr0lYdEfmZUjbrO92OqqYZX1ep_V04wYENdiOR6wMnHCl-N1L7M4Nw8A2lYJPNgoLPwkFPhYnK7o3MErp3vRk5gaoWZw3SuiyzDyz7AWUPOeNw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientId\": \"petshare-backend\",\r\n    \"password\": \"user123\",\r\n    \"grantType\": \"password\",\r\n    \"username\": \"user_petshare\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8181/token/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"token",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Admin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientId\": \"petshare-backend\",\r\n    \"password\": \"admin\",\r\n    \"grantType\": \"password\",\r\n    \"username\": \"admin_petshare\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8181/token/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"token",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
