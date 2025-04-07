@@ -29,12 +29,11 @@ public class AdoptionAnimal {
     private Long id;
     private LocalDate date;
     private String status;
+    @ManyToOne
+    @JoinColumn(name = "adopter_id")
+    private User adopter;
 
     @ManyToOne
-    @JoinColumn(name = "animal_id")
-    private Animal animal;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "donate_animal_id")
+    private DonateAnimal donateAnimal;
 }

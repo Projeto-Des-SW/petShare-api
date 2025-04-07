@@ -14,15 +14,15 @@ public class AdoptionAnimalResponse {
 	private Long id;
 	private LocalDate date;
 	private String status;
-	private AnimalResponse animal;
-	private UserResponse user;
+	private UserResponse adopter;
+	private DonateAnimalResponse donateAnimal;
 
 	public AdoptionAnimalResponse(AdoptionAnimal obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
 		this.status = obj.getStatus();
-		this.animal = new AnimalResponse(obj.getAnimal());
-		this.user = new UserResponse(obj.getUser());
+		this.adopter = new UserResponse(obj.getAdopter());
+		this.donateAnimal = new DonateAnimalResponse(obj.getDonateAnimal());
 	}
 
 }

@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewUserRequest;
 import br.com.ufape.petshare.controller.dto.request.updatedto.UserUpdateRequest;
@@ -66,7 +68,9 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody NewUserRequest obj) {
 		User createdObj = facade.saveUser(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")
@@ -75,7 +79,8 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserResponse> updateUser(@PathVariable("id") Long id, @Valid @RequestBody UserUpdateRequest updatedObj) {
+	public ResponseEntity<UserResponse> updateUser(@PathVariable("id") Long id,
+			@Valid @RequestBody UserUpdateRequest updatedObj) {
 		User obj = facade.updateUser(id, updatedObj.toEntity());
 		return ResponseEntity.ok(new UserResponse(obj));
 

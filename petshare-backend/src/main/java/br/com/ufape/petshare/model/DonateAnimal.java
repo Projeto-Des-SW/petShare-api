@@ -31,13 +31,13 @@ public class DonateAnimal {
 	private LocalDate date;
 	private String status;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "animal_id")
 	private Animal animal;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private User donor;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")

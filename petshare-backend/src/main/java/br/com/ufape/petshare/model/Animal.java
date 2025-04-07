@@ -32,4 +32,6 @@ public class Animal {
 	private String medicalNotes;
 	private String sex;
 	private String size;
+	private String category;
+
 }

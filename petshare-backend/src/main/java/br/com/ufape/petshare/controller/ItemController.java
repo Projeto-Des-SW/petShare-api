@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewItemRequest;
 import br.com.ufape.petshare.controller.dto.request.updatedto.ItemUpdateRequest;
@@ -26,11 +28,10 @@ import br.com.ufape.petshare.model.Item;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Items")
+@RequestMapping("/items")
 public class ItemController {
 	@Autowired
 	private PetShare facade;
-
 
 	@GetMapping
 	public ResponseEntity<List<ItemResponse>> getAllItems() {
@@ -48,9 +49,11 @@ public class ItemController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ItemResponse> createItem(@Valid @RequestBody NewItemRequest obj) {
+	public ResponseEntity<Void> createItem(@Valid @RequestBody NewItemRequest obj) {
 		Item createdObj = facade.saveItem(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ItemResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")
@@ -59,7 +62,8 @@ public class ItemController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ItemResponse> updateItem(@PathVariable("id") Long id, @Valid @RequestBody ItemUpdateRequest updatedObj) {
+	public ResponseEntity<ItemResponse> updateItem(@PathVariable("id") Long id,
+			@Valid @RequestBody ItemUpdateRequest updatedObj) {
 		System.out.println(id);
 		Item obj = facade.updateItem(id, updatedObj.toEntity());
 		return ResponseEntity.ok(new ItemResponse(obj));

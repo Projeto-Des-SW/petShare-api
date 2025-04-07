@@ -20,64 +20,60 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.ufape.petshare.controller.dto.request.newdto.NewDonateAnimalRequest;
-import br.com.ufape.petshare.controller.dto.request.updatedto.DonateAnimalUpdateRequest;
-import br.com.ufape.petshare.controller.dto.response.DonateAnimalResponse;
+import br.com.ufape.petshare.controller.dto.request.newdto.NewReceivedItemRequest;
+import br.com.ufape.petshare.controller.dto.request.updatedto.ReceivedItemUpdateRequest;
+import br.com.ufape.petshare.controller.dto.response.ReceivedItemResponse;
 import br.com.ufape.petshare.facade.PetShare;
-import br.com.ufape.petshare.model.DonateAnimal;
+import br.com.ufape.petshare.model.ReceivedItem;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/donateanimals")
-public class DonateAnimalController {
+@RequestMapping("/receiveditems")
+public class ReceivedItemController {
 	@Autowired
 	private PetShare facade;
 
-
 	@GetMapping
-	public ResponseEntity<List<DonateAnimalResponse>> getAllDonateAnimals() {
-		return ResponseEntity.status(HttpStatus.OK).body(facade.getAllDonateAnimals().stream().map(DonateAnimalResponse::new).toList());
-	}
-	
-	@GetMapping("/available")
-	public ResponseEntity<List<DonateAnimalResponse>> getAvailableDonations() {
-		return ResponseEntity.status(HttpStatus.OK).body(facade.getAvailableDonations().stream().map(DonateAnimalResponse::new).toList());
+	public ResponseEntity<List<ReceivedItemResponse>> getAllReceivedItems() {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.getAllReceivedItems().stream().map(ReceivedItemResponse::new).toList());
 	}
 
 	@GetMapping("/page")
-	public ResponseEntity<Page<DonateAnimalResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ReceivedItemResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "24") Integer linesPerPage,
 			@RequestParam(defaultValue = "nome") String orderBy, @RequestParam(defaultValue = "ASC") String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		Page<DonateAnimal> list = facade.findDonateAnimalPage(pageRequest);
-		Page<DonateAnimalResponse> listDto = list.map(obj -> new DonateAnimalResponse(obj));
+		Page<ReceivedItem> list = facade.findReceivedItemPage(pageRequest);
+		Page<ReceivedItemResponse> listDto = list.map(obj -> new ReceivedItemResponse(obj));
 		return ResponseEntity.ok().body(listDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createDonateAnimal(@Valid @RequestBody NewDonateAnimalRequest obj) {
-		DonateAnimal createdObj = facade.saveDonateAnimal(obj.toEntity());
+	public ResponseEntity<Void> createReceivedItem(@Valid @RequestBody NewReceivedItemRequest obj) {
+		ReceivedItem createdObj = facade.saveReceivedItem(obj.toEntity());
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<DonateAnimalResponse> getDonateAnimalById(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(new DonateAnimalResponse(facade.findDonateAnimalById(id)));
+	public ResponseEntity<ReceivedItemResponse> getReceivedItemById(@PathVariable("id") Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(new ReceivedItemResponse(facade.findReceivedItemById(id)));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<DonateAnimalResponse> updateDonateAnimal(@PathVariable("id") Long id, @Valid @RequestBody DonateAnimalUpdateRequest updatedObj) {
+	public ResponseEntity<ReceivedItemResponse> updateReceivedItem(@PathVariable("id") Long id,
+			@Valid @RequestBody ReceivedItemUpdateRequest updatedObj) {
 		System.out.println(id);
-		DonateAnimal obj = facade.updateDonateAnimal(id, updatedObj.toEntity());
-		return ResponseEntity.ok(new DonateAnimalResponse(obj));
+		ReceivedItem obj = facade.updateReceivedItem(id, updatedObj.toEntity());
+		return ResponseEntity.ok(new ReceivedItemResponse(obj));
 
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteDonateAnimal(@PathVariable("id") Long id) {
-		facade.deleteDonateAnimal(id);
+	public ResponseEntity<Void> deleteReceivedItem(@PathVariable("id") Long id) {
+		facade.deleteReceivedItem(id);
 		return ResponseEntity.noContent().build();
 	}
 
