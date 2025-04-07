@@ -21,6 +21,8 @@ public class UserUpdateRequest {
     @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
     private String name;
 
+	private String image;
+	
     @NotBlank(message = "O e-mail não pode estar vazio")
     @Email(message = "Formato de e-mail inválido")
     private String email;
@@ -40,6 +42,6 @@ public class UserUpdateRequest {
     private AddressRequest address;
     
     public User toEntity() {
-		return new User(null, name, email, phone, status, bornDate, null, null, address.toEntity());
+		return new User(null, name, image, email, phone, status, bornDate, null, null, address.toEntity());
 	}
 }

@@ -37,7 +37,7 @@ public class DonateAnimal {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private User donor;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")

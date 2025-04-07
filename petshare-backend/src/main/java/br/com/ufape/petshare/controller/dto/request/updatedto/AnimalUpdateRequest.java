@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AnimalUpdateRequest {
-    private Long id;
+	private Long id;
 	private String name;
 	private String race;
 	private String status;
@@ -20,8 +20,9 @@ public class AnimalUpdateRequest {
 	private String medicalNotes;
 	private String sex;
 	private String size;
-	
+	private String category;
+
 	public Animal toEntity() {
-		return new Animal(null, name, race, status, bornDate, observations, medicalNotes, sex, size);
-     }
+		return new Animal(null, name, race, status, bornDate, observations, medicalNotes, sex, size, category);
+	}
 }

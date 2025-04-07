@@ -4,12 +4,15 @@ import java.time.LocalDate;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,24 +27,29 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Request {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Double receivedQuantity;
-    private Double quantity;
-    private String status;
-    private LocalDate date;
+public class ReceivedItem {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private LocalDate date;
+	private String status;
+	private Double quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "request_id")
+	@Null
+	private Request request;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "donate_item_id")
+	@Null
+	private DonateItem donateItem;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "item_id")
-    private Item item;
-    
-    @OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User receiver;
+	
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")
 	private Post post;
 }

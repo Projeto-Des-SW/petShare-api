@@ -32,13 +32,13 @@ public class DonateItem {
 	private String status;
 	private Double quantity;
 
-	@ManyToOne
-	@JoinColumn(name = "request_id")
-	private Request request;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "item_id")
+	private Item item;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private User donor;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")

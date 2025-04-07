@@ -14,7 +14,6 @@ public class ItemResponse {
     private String description;
     private String status;
     private String brand;
-    private String photo;
     private TypeItemResponse typeItem;
     
 	public ItemResponse(Item obj) {
@@ -23,7 +22,6 @@ public class ItemResponse {
 		this.description = obj.getDescription();
 		this.status = obj.getStatus();
 		this.brand = obj.getBrand();
-		this.photo = obj.getPhoto();
 		this.typeItem = new TypeItemResponse(obj.getTypeItem());
 	}
 

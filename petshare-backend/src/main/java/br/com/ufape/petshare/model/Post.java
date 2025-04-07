@@ -1,5 +1,9 @@
 package br.com.ufape.petshare.model;
 
+import java.util.List;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,4 +28,7 @@ public class Post {
     private Long id;
     private String text;
     private String type;
+    @ElementCollection
+	@CollectionTable(name = "POST_IMAGES")
+    private List<String> images;
 }

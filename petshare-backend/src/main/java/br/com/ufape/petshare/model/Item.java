@@ -28,7 +28,6 @@ public class Item {
     private String description;
     private String status;
     private String brand;
-    private String photo;
 
     @ManyToOne
     @JoinColumn(name = "campo_id")
