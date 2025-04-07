@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +30,7 @@ public class Item {
     private String status;
     private String brand;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "campo_id")
     private TypeItem typeItem;
 }

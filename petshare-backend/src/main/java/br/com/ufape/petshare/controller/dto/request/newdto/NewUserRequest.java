@@ -55,6 +55,6 @@ public class NewUserRequest {
     private AddressRequest address;
     
     public User toEntity() {
-		return new User(null, name, email, image, phone, status, bornDate, cpf, password, address.toEntity());
+		return new User(null, name, image, email, phone, status, bornDate, cpf, password, address.toEntity());
 	}
 }

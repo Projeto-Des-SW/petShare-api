@@ -30,7 +30,8 @@ public class UserResponse {
 		this.bornDate = obj.getBornDate();
 		this.cpf = obj.getCpf();
 		this.image = obj.getImage();
-		this.address = new AddressResponse(obj.getAddress());
+		if(obj.getAddress() != null)
+			this.address = new AddressResponse(obj.getAddress());
 	}
 
 }

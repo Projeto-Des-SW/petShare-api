@@ -31,7 +31,7 @@ public class DonateAnimal {
 	private LocalDate date;
 	private String status;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "animal_id")
 	private Animal animal;
 

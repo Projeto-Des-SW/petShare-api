@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewReceivedItemRequest;
 import br.com.ufape.petshare.controller.dto.request.updatedto.ReceivedItemUpdateRequest;
@@ -26,7 +28,7 @@ import br.com.ufape.petshare.model.ReceivedItem;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Receiveditems")
+@RequestMapping("/receiveditems")
 public class ReceivedItemController {
 	@Autowired
 	private PetShare facade;
@@ -48,9 +50,11 @@ public class ReceivedItemController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ReceivedItemResponse> createReceivedItem(@Valid @RequestBody NewReceivedItemRequest obj) {
+	public ResponseEntity<Void> createReceivedItem(@Valid @RequestBody NewReceivedItemRequest obj) {
 		ReceivedItem createdObj = facade.saveReceivedItem(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ReceivedItemResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")

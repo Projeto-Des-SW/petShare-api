@@ -21,7 +21,6 @@ public class AnimalResponse {
 	private String sex;
 	private String size;
 	private String category;
-	private PostResponse post;
 
 	public AnimalResponse(Animal obj) {
 		this.id = obj.getId();
