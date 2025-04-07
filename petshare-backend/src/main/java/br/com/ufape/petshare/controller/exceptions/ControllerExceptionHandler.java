@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 import br.com.ufape.petshare.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,6 +28,13 @@ public class ControllerExceptionHandler {
 	public ResponseEntity<StandardError> ObjectNotFoundException(RuntimeException e, HttpServletRequest request) {
 		int httpStatus = HttpStatus.NOT_FOUND.value();
 		StandardError err = new StandardError(httpStatus, "Não Encontrado", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(httpStatus).body(err);
+	}
+	
+	@ExceptionHandler({ InvalidStatusException.class })
+	public ResponseEntity<StandardError> invalidStatusException(RuntimeException e, HttpServletRequest request) {
+		int httpStatus = HttpStatus.UNPROCESSABLE_ENTITY.value();
+		StandardError err = new StandardError(httpStatus, "Entidade não processável", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(httpStatus).body(err);
 	}
 

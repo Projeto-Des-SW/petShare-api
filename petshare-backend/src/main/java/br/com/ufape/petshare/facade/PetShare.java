@@ -27,6 +27,7 @@ import br.com.ufape.petshare.services.ReceivedItemServiceInterface;
 import br.com.ufape.petshare.services.RequestServiceInterface;
 import br.com.ufape.petshare.services.TypeItemServiceInterface;
 import br.com.ufape.petshare.services.UserServiceInterface;
+import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 
 @Service
 public class PetShare {
@@ -195,9 +196,21 @@ public class PetShare {
 
 	public Page<DonateAnimal> findDonateAnimalPage(PageRequest pageRequest) {
 		return donateanimalService.findDonateAnimalPage(pageRequest);
-	} /* ADOPTIONANIMAL METHODS */
+	}
+	
+	public List<DonateAnimal> getAvailableDonations() {
+	    return donateanimalService.getAvailableDonations();
+	}
+	
+	/* ADOPTIONANIMAL METHODS */
 
 	public AdoptionAnimal saveAdoptionAnimal(AdoptionAnimal adoptionanimal) {
+		DonateAnimal donateAnimal = findDonateAnimalById(adoptionanimal.getDonateAnimal().getId());
+		if(!donateAnimal.getStatus().equals("Em aberto"))
+			throw new InvalidStatusException("Animal indisponível para adoção");
+		donateAnimal.setStatus("Em andamento");
+		donateAnimal = updateDonateAnimal(donateAnimal.getId(), donateAnimal);
+		adoptionanimal.setDonateAnimal(donateAnimal); 
 		return adoptionanimalService.saveAdoptionAnimal(adoptionanimal);
 	}
 

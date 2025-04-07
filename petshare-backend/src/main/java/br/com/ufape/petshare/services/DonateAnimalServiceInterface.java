@@ -14,6 +14,8 @@ public interface DonateAnimalServiceInterface {
 	DonateAnimal findDonateAnimalById(Long id);
 
 	List<DonateAnimal> getAllDonateAnimals();
+	
+	List<DonateAnimal> getAvailableDonations();
 
 	DonateAnimal updateDonateAnimal(Long id, DonateAnimal donateAnimalDetails);
 

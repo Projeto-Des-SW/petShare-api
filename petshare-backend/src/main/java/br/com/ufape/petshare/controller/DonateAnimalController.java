@@ -38,6 +38,11 @@ public class DonateAnimalController {
 	public ResponseEntity<List<DonateAnimalResponse>> getAllDonateAnimals() {
 		return ResponseEntity.status(HttpStatus.OK).body(facade.getAllDonateAnimals().stream().map(DonateAnimalResponse::new).toList());
 	}
+	
+	@GetMapping("/available")
+	public ResponseEntity<List<DonateAnimalResponse>> getAvailableDonations() {
+		return ResponseEntity.status(HttpStatus.OK).body(facade.getAvailableDonations().stream().map(DonateAnimalResponse::new).toList());
+	}
 
 	@GetMapping("/page")
 	public ResponseEntity<Page<DonateAnimalResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
