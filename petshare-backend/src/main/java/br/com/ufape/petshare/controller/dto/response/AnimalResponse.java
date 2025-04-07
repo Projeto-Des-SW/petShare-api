@@ -20,6 +20,7 @@ public class AnimalResponse {
 	private String medicalNotes;
 	private String sex;
 	private String size;
+	private String category;
 
 	public AnimalResponse(Animal obj) {
 		this.id = obj.getId();
@@ -31,7 +32,7 @@ public class AnimalResponse {
 		this.medicalNotes = obj.getMedicalNotes();
 		this.sex = obj.getSex();
 		this.size = obj.getSex();
-		
+		this.category = obj.getCategory();
 	}
 
 }

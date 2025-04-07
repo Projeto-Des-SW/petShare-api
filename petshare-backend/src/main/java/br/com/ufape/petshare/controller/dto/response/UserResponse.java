@@ -19,16 +19,19 @@ public class UserResponse {
 	private LocalDate bornDate;
 	private String cpf;
 	private AddressResponse address;
+	private String image;
 
-	public UserResponse(User user) {
-		this.id = user.getId();
-		this.name = user.getName();
-		this.email = user.getEmail();
-		this.phone = user.getPhone();
-		this.status = user.getStatus();
-		this.bornDate = user.getBornDate();
-		this.cpf = user.getCpf();
-		this.address = new AddressResponse(user.getAddress());
+	public UserResponse(User obj) {
+		this.id = obj.getId();
+		this.name = obj.getName();
+		this.email = obj.getEmail();
+		this.phone = obj.getPhone();
+		this.status = obj.getStatus();
+		this.bornDate = obj.getBornDate();
+		this.cpf = obj.getCpf();
+		this.image = obj.getImage();
+		if(obj.getAddress() != null)
+			this.address = new AddressResponse(obj.getAddress());
 	}
 
 }

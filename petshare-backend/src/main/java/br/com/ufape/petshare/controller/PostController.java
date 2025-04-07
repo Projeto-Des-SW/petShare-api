@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.PostRequest;
 import br.com.ufape.petshare.controller.dto.response.PostResponse;
@@ -25,7 +27,7 @@ import br.com.ufape.petshare.model.Post;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Posts")
+@RequestMapping("/posts")
 public class PostController {
 	@Autowired
 	private PetShare facade;
@@ -46,9 +48,11 @@ public class PostController {
 	}
 
 	@PostMapping
-	public ResponseEntity<PostResponse> createPost(@Valid @RequestBody PostRequest obj) {
+	public ResponseEntity<Void> createPost(@Valid @RequestBody PostRequest obj) {
 		Post createdObj = facade.savePost(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new PostResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")

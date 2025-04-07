@@ -28,6 +28,8 @@ public class NewUserRequest {
     @NotBlank(message = "O e-mail não pode estar vazio")
     @Email(message = "Formato de e-mail inválido")
     private String email;
+    
+    private String image;
 
     @NotBlank(message = "O telefone não pode estar vazio")
     @Size(min = 10, max = 15, message = "O telefone deve ter entre 10 e 15 caracteres")
@@ -53,6 +55,6 @@ public class NewUserRequest {
     private AddressRequest address;
     
     public User toEntity() {
-		return new User(null, name, email, phone, status, bornDate, cpf, password, address.toEntity());
+		return new User(null, name, image, email, phone, status, bornDate, cpf, password, address.toEntity());
 	}
 }

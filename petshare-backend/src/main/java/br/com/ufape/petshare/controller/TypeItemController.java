@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.TypeItemRequest;
 import br.com.ufape.petshare.controller.dto.response.TypeItemResponse;
@@ -47,9 +49,11 @@ public class TypeItemController {
 	}
 
 	@PostMapping
-	public ResponseEntity<TypeItemResponse> createTypeItem(@Valid @RequestBody TypeItemRequest obj) {
+	public ResponseEntity<Void> createTypeItem(@Valid @RequestBody TypeItemRequest obj) {
 		TypeItem createdObj = facade.saveTypeItem(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new TypeItemResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")

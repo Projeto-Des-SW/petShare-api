@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,9 +29,8 @@ public class Item {
     private String description;
     private String status;
     private String brand;
-    private String photo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "campo_id")
     private TypeItem typeItem;
 }

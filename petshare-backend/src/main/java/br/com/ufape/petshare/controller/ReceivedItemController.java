@@ -20,59 +20,60 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.ufape.petshare.controller.dto.request.newdto.NewItemRequest;
-import br.com.ufape.petshare.controller.dto.request.updatedto.ItemUpdateRequest;
-import br.com.ufape.petshare.controller.dto.response.ItemResponse;
+import br.com.ufape.petshare.controller.dto.request.newdto.NewReceivedItemRequest;
+import br.com.ufape.petshare.controller.dto.request.updatedto.ReceivedItemUpdateRequest;
+import br.com.ufape.petshare.controller.dto.response.ReceivedItemResponse;
 import br.com.ufape.petshare.facade.PetShare;
-import br.com.ufape.petshare.model.Item;
+import br.com.ufape.petshare.model.ReceivedItem;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/items")
-public class ItemController {
+@RequestMapping("/receiveditems")
+public class ReceivedItemController {
 	@Autowired
 	private PetShare facade;
 
 	@GetMapping
-	public ResponseEntity<List<ItemResponse>> getAllItems() {
-		return ResponseEntity.status(HttpStatus.OK).body(facade.getAllItems().stream().map(ItemResponse::new).toList());
+	public ResponseEntity<List<ReceivedItemResponse>> getAllReceivedItems() {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.getAllReceivedItems().stream().map(ReceivedItemResponse::new).toList());
 	}
 
 	@GetMapping("/page")
-	public ResponseEntity<Page<ItemResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ReceivedItemResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "24") Integer linesPerPage,
 			@RequestParam(defaultValue = "nome") String orderBy, @RequestParam(defaultValue = "ASC") String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		Page<Item> list = facade.findItemPage(pageRequest);
-		Page<ItemResponse> listDto = list.map(obj -> new ItemResponse(obj));
+		Page<ReceivedItem> list = facade.findReceivedItemPage(pageRequest);
+		Page<ReceivedItemResponse> listDto = list.map(obj -> new ReceivedItemResponse(obj));
 		return ResponseEntity.ok().body(listDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createItem(@Valid @RequestBody NewItemRequest obj) {
-		Item createdObj = facade.saveItem(obj.toEntity());
+	public ResponseEntity<Void> createReceivedItem(@Valid @RequestBody NewReceivedItemRequest obj) {
+		ReceivedItem createdObj = facade.saveReceivedItem(obj.toEntity());
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ItemResponse> getItemById(@PathVariable("id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(new ItemResponse(facade.findItemById(id)));
+	public ResponseEntity<ReceivedItemResponse> getReceivedItemById(@PathVariable("id") Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(new ReceivedItemResponse(facade.findReceivedItemById(id)));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ItemResponse> updateItem(@PathVariable("id") Long id,
-			@Valid @RequestBody ItemUpdateRequest updatedObj) {
+	public ResponseEntity<ReceivedItemResponse> updateReceivedItem(@PathVariable("id") Long id,
+			@Valid @RequestBody ReceivedItemUpdateRequest updatedObj) {
 		System.out.println(id);
-		Item obj = facade.updateItem(id, updatedObj.toEntity());
-		return ResponseEntity.ok(new ItemResponse(obj));
+		ReceivedItem obj = facade.updateReceivedItem(id, updatedObj.toEntity());
+		return ResponseEntity.ok(new ReceivedItemResponse(obj));
 
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteItem(@PathVariable("id") Long id) {
-		facade.deleteItem(id);
+	public ResponseEntity<Void> deleteReceivedItem(@PathVariable("id") Long id) {
+		facade.deleteReceivedItem(id);
 		return ResponseEntity.noContent().build();
 	}
 

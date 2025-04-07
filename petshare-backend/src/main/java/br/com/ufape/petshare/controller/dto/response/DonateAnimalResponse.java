@@ -17,14 +17,14 @@ public class DonateAnimalResponse {
 
     private AnimalResponse animal;
 
-    private UserResponse user;
+    private UserResponse donor;
 	
 	public DonateAnimalResponse(DonateAnimal obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
 		this.status = obj.getStatus();
 		this.animal = new AnimalResponse(obj.getAnimal());
-		this.user = new UserResponse(obj.getUser());
+		this.donor = new UserResponse(obj.getDonor());
 	}
 
 }

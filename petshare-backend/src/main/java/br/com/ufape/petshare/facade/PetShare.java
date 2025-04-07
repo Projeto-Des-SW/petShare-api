@@ -1,30 +1,32 @@
 package br.com.ufape.petshare.facade;
 
-import br.com.ufape.petshare.model.User;
-import br.com.ufape.petshare.services.UserServiceInterface;
-import br.com.ufape.petshare.model.Animal;
-import br.com.ufape.petshare.services.AnimalServiceInterface;
-import br.com.ufape.petshare.model.Item;
-import br.com.ufape.petshare.services.ItemServiceInterface;
-import br.com.ufape.petshare.model.TypeItem;
-import br.com.ufape.petshare.services.TypeItemServiceInterface;
-import br.com.ufape.petshare.model.Post;
-import br.com.ufape.petshare.services.PostServiceInterface;
-import br.com.ufape.petshare.model.DonateAnimal;
-import br.com.ufape.petshare.services.DonateAnimalServiceInterface;
-import br.com.ufape.petshare.model.AdoptionAnimal;
-import br.com.ufape.petshare.services.AdoptionAnimalServiceInterface;
-import br.com.ufape.petshare.model.DonateItem;
-import br.com.ufape.petshare.services.DonateItemServiceInterface;
-import br.com.ufape.petshare.model.Request;
-import br.com.ufape.petshare.services.RequestServiceInterface;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import br.com.ufape.petshare.model.AdoptionAnimal;
+import br.com.ufape.petshare.model.Animal;
+import br.com.ufape.petshare.model.DonateAnimal;
+import br.com.ufape.petshare.model.DonateItem;
+import br.com.ufape.petshare.model.Item;
+import br.com.ufape.petshare.model.Post;
+import br.com.ufape.petshare.model.ReceivedItem;
+import br.com.ufape.petshare.model.Request;
+import br.com.ufape.petshare.model.TypeItem;
+import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.services.AdoptionAnimalServiceInterface;
+import br.com.ufape.petshare.services.AnimalServiceInterface;
+import br.com.ufape.petshare.services.DonateAnimalServiceInterface;
+import br.com.ufape.petshare.services.DonateItemServiceInterface;
+import br.com.ufape.petshare.services.ItemServiceInterface;
+import br.com.ufape.petshare.services.PostServiceInterface;
+import br.com.ufape.petshare.services.ReceivedItemServiceInterface;
+import br.com.ufape.petshare.services.RequestServiceInterface;
+import br.com.ufape.petshare.services.TypeItemServiceInterface;
+import br.com.ufape.petshare.services.UserServiceInterface;
 
 @Service
 public class PetShare {
@@ -45,6 +47,8 @@ public class PetShare {
 	private AdoptionAnimalServiceInterface adoptionanimalService;
 	@Autowired
 	private DonateItemServiceInterface donateitemService;
+	@Autowired
+	private ReceivedItemServiceInterface receiveditemService;
 	@Autowired
 	private RequestServiceInterface requestService;
 
@@ -215,7 +219,7 @@ public class PetShare {
 
 	public Page<AdoptionAnimal> findAdoptionAnimalPage(PageRequest pageRequest) {
 		return adoptionanimalService.findAdoptionAnimalPage(pageRequest);
-	} /* DONATEITEM METHODS */
+	} /* RECEIVEDITEM METHODS */
 
 	public DonateItem saveDonateItem(DonateItem donateitem) {
 		return donateitemService.saveDonateItem(donateitem);
@@ -239,7 +243,35 @@ public class PetShare {
 
 	public Page<DonateItem> findDonateItemPage(PageRequest pageRequest) {
 		return donateitemService.findDonateItemPage(pageRequest);
-	} /* REQUEST METHODS */
+	}
+
+	/* DONATEITEM METHODS */
+
+	public ReceivedItem saveReceivedItem(ReceivedItem receiveditem) {
+		return receiveditemService.saveReceivedItem(receiveditem);
+	}
+
+	public ReceivedItem findReceivedItemById(Long id) {
+		return receiveditemService.findReceivedItemById(id);
+	}
+
+	public List<ReceivedItem> getAllReceivedItems() {
+		return receiveditemService.getAllReceivedItems();
+	}
+
+	public ReceivedItem updateReceivedItem(Long id, ReceivedItem receiveditemDetails) {
+		return receiveditemService.updateReceivedItem(id, receiveditemDetails);
+	}
+
+	public void deleteReceivedItem(Long id) {
+		receiveditemService.deleteReceivedItem(id);
+	}
+
+	public Page<ReceivedItem> findReceivedItemPage(PageRequest pageRequest) {
+		return receiveditemService.findReceivedItemPage(pageRequest);
+	}
+
+	/* REQUEST METHODS */
 
 	public Request saveRequest(Request request) {
 		return requestService.saveRequest(request);

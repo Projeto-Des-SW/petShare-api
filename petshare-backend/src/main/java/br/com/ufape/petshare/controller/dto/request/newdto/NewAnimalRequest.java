@@ -22,8 +22,9 @@ public class NewAnimalRequest {
 	private String medicalNotes;
 	private String sex;
 	private String size;
+	private String category;
 
 	public Animal toEntity() {
-		return new Animal(null, name, race, status, bornDate, observations, medicalNotes, sex, size);
+		return new Animal(null, name, race, status, bornDate, observations, medicalNotes, sex, size, category);
 	}
 }

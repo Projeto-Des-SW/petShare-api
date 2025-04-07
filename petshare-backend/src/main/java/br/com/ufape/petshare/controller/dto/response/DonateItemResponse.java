@@ -16,17 +16,20 @@ public class DonateItemResponse {
 	private String status;
 	private Double quantity;
 
-	private RequestResponse request;
+	private ItemResponse item;
 
-	private UserResponse user;
+	private UserResponse donor;
+
+	private PostResponse post;
 
 	public DonateItemResponse(DonateItem obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
 		this.status = obj.getStatus();
 		this.quantity = obj.getQuantity();
-		this.request = new RequestResponse(obj.getRequest());
-		this.user = new UserResponse(obj.getUser());
+		this.item = new ItemResponse(obj.getItem());
+		this.donor = new UserResponse(obj.getDonor());
+		this.post = new PostResponse(obj.getPost());
 	}
 
 }

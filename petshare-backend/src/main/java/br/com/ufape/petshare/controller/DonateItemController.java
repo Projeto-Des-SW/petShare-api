@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewDonateItemRequest;
 import br.com.ufape.petshare.controller.dto.request.updatedto.DonateItemUpdateRequest;
@@ -48,9 +50,11 @@ public class DonateItemController {
 	}
 
 	@PostMapping
-	public ResponseEntity<DonateItemResponse> createDonateItem(@Valid @RequestBody NewDonateItemRequest obj) {
+	public ResponseEntity<Void> createDonateItem(@Valid @RequestBody NewDonateItemRequest obj) {
 		DonateItem createdObj = facade.saveDonateItem(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new DonateItemResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")

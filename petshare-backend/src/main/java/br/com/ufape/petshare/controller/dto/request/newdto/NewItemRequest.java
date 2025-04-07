@@ -16,10 +16,9 @@ public class NewItemRequest {
 	private String description;
 	private String status;
 	private String brand;
-	private String photo;
 	private TypeItemRequest typeItem;
 
 	public Item toEntity() {
-		return new Item(null, name, description, status, brand, photo, typeItem.toEntity());
+		return new Item(null, name, description, status, brand, typeItem.toEntity());
 	}
 }

@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewAdoptionAnimalRequest;
 import br.com.ufape.petshare.controller.dto.response.AdoptionAnimalResponse;
@@ -29,10 +31,10 @@ public class AdoptionAnimalController {
 	@Autowired
 	private PetShare facade;
 
-
 	@GetMapping
 	public ResponseEntity<List<AdoptionAnimalResponse>> getAllAdoptionAnimals() {
-		return ResponseEntity.status(HttpStatus.OK).body(facade.getAllAdoptionAnimals().stream().map(AdoptionAnimalResponse::new).toList());
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.getAllAdoptionAnimals().stream().map(AdoptionAnimalResponse::new).toList());
 	}
 
 	@GetMapping("/page")
@@ -46,9 +48,11 @@ public class AdoptionAnimalController {
 	}
 
 	@PostMapping
-	public ResponseEntity<AdoptionAnimalResponse> createAdoptionAnimal(@Valid @RequestBody NewAdoptionAnimalRequest obj) {
+	public ResponseEntity<Void> createAdoptionAnimal(@Valid @RequestBody NewAdoptionAnimalRequest obj) {
 		AdoptionAnimal createdObj = facade.saveAdoptionAnimal(obj.toEntity());
-		return ResponseEntity.status(HttpStatus.CREATED).body(new AdoptionAnimalResponse(createdObj));
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@GetMapping("/{id}")
