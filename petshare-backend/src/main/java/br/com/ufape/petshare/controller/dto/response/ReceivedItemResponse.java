@@ -22,8 +22,6 @@ public class ReceivedItemResponse {
 	
 	private DonateItemResponse donateItem;
 
-	private PostResponse post;
-
 	public ReceivedItemResponse(ReceivedItem obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
@@ -34,7 +32,6 @@ public class ReceivedItemResponse {
 		if(obj.getRequest() != null)
 			this.request = new RequestResponse(obj.getRequest());
 		this.receiver = new UserResponse(obj.getReceiver());
-		this.post = new PostResponse(obj.getPost());
 	}
 
 }
