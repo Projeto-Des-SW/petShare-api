@@ -58,4 +58,8 @@ public class DonateAnimalService implements DonateAnimalServiceInterface {
 		}
 		donateAnimalRepository.deleteById(id);
 	}
+
+	public List<DonateAnimal> getAvailableDonations() {
+	    return donateAnimalRepository.findByStatus("Em aberto");
+	}
 }

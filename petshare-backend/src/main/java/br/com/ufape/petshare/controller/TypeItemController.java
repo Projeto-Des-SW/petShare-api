@@ -24,10 +24,12 @@ import br.com.ufape.petshare.controller.dto.request.TypeItemRequest;
 import br.com.ufape.petshare.controller.dto.response.TypeItemResponse;
 import br.com.ufape.petshare.facade.PetShare;
 import br.com.ufape.petshare.model.TypeItem;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/TypeItems")
+@Hidden
 public class TypeItemController {
 	@Autowired
 	private PetShare facade;

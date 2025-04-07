@@ -25,10 +25,12 @@ import br.com.ufape.petshare.controller.dto.request.updatedto.AnimalUpdateReques
 import br.com.ufape.petshare.controller.dto.response.AnimalResponse;
 import br.com.ufape.petshare.facade.PetShare;
 import br.com.ufape.petshare.model.Animal;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/animals")
+@Hidden
 public class AnimalController {
 	@Autowired
 	private PetShare facade;

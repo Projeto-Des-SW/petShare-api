@@ -24,10 +24,12 @@ import br.com.ufape.petshare.controller.dto.request.PostRequest;
 import br.com.ufape.petshare.controller.dto.response.PostResponse;
 import br.com.ufape.petshare.facade.PetShare;
 import br.com.ufape.petshare.model.Post;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/posts")
+@Hidden
 public class PostController {
 	@Autowired
 	private PetShare facade;

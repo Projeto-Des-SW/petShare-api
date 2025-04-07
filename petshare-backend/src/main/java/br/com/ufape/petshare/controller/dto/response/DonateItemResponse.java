@@ -18,7 +18,7 @@ public class DonateItemResponse {
 
 	private ItemResponse item;
 
-	private UserResponse donor;
+	private UserResponse user;
 
 	private PostResponse post;
 
@@ -28,7 +28,7 @@ public class DonateItemResponse {
 		this.status = obj.getStatus();
 		this.quantity = obj.getQuantity();
 		this.item = new ItemResponse(obj.getItem());
-		this.donor = new UserResponse(obj.getDonor());
+		this.user = new UserResponse(obj.getDonor());
 		this.post = new PostResponse(obj.getPost());
 	}
 
