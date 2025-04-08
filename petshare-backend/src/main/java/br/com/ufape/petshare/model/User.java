@@ -48,7 +48,4 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "address_id", referencedColumnName = "id")
 	private Address address;
-
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Login login;
 }
