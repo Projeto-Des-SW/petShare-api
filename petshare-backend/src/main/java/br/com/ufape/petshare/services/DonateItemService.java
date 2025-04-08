@@ -34,6 +34,11 @@ public class DonateItemService implements DonateItemServiceInterface {
 	public List<DonateItem> getAllDonateItems() {
 		return donateItemRepository.findAll();
 	}
+	
+	@Override
+	public List<DonateItem> getAvailableDonations() {
+	    return donateItemRepository.findByStatus("Disponível");
+	}
 
 	@Override
 	public Page<DonateItem> findDonateItemPage(PageRequest pageRequest) {

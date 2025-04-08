@@ -23,4 +23,6 @@ public interface RequestServiceInterface {
 
 	Page<Request> findRequestPage(PageRequest pageRequest);
 
+	List<Request> getOpenRequests();
+
 }

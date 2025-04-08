@@ -38,6 +38,11 @@ public class DonateItemController {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(facade.getAllDonateItems().stream().map(DonateItemResponse::new).toList());
 	}
+	
+	@GetMapping("/available")
+	public ResponseEntity<List<DonateItemResponse>> getAvailableDonations() {
+		return ResponseEntity.status(HttpStatus.OK).body(facade.getAvailableItemsDonations().stream().map(DonateItemResponse::new).toList());
+	}
 
 	@GetMapping("/page")
 	public ResponseEntity<Page<DonateItemResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,

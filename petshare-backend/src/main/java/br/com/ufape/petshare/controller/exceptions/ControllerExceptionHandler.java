@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.ufape.petshare.services.exceptions.InvalidReceivedItemException;
 import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 import br.com.ufape.petshare.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +34,13 @@ public class ControllerExceptionHandler {
 	
 	@ExceptionHandler({ InvalidStatusException.class })
 	public ResponseEntity<StandardError> invalidStatusException(RuntimeException e, HttpServletRequest request) {
+		int httpStatus = HttpStatus.UNPROCESSABLE_ENTITY.value();
+		StandardError err = new StandardError(httpStatus, "Entidade não processável", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(httpStatus).body(err);
+	}
+	
+	@ExceptionHandler({ InvalidReceivedItemException.class })
+	public ResponseEntity<StandardError> invalidReceivedItemException(RuntimeException e, HttpServletRequest request) {
 		int httpStatus = HttpStatus.UNPROCESSABLE_ENTITY.value();
 		StandardError err = new StandardError(httpStatus, "Entidade não processável", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(httpStatus).body(err);
