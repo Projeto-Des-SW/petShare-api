@@ -66,7 +66,6 @@ public class AnimalController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<AnimalResponse> updateAnimal(@PathVariable("id") Long id, @Valid @RequestBody AnimalUpdateRequest updatedObj) {
-		System.out.println(id);
 		Animal obj = facade.updateAnimal(id, updatedObj.toEntity());
 		return ResponseEntity.ok(new AnimalResponse(obj));
 

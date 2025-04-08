@@ -60,7 +60,7 @@ public class DonateAnimalService implements DonateAnimalServiceInterface {
 	}
 
 	public List<DonateAnimal> getAvailableDonations() {
-	    return donateAnimalRepository.findByStatus("Em aberto");
+	    return donateAnimalRepository.findByStatus("Disponível");
 	}
 
 	@Override
