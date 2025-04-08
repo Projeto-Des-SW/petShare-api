@@ -14,7 +14,10 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins(
+                 "https://petshare-api-production.up.railway.app",
+                            "http://localhost:3000"
+                        )
                         .allowedHeaders("*")
                         .allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS");
             }
