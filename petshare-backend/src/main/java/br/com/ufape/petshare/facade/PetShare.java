@@ -217,6 +217,14 @@ public class PetShare {
 	public AdoptionAnimal findAdoptionAnimalById(Long id) {
 		return adoptionanimalService.findAdoptionAnimalById(id);
 	}
+	
+	public List<AdoptionAnimal> findAdoptionAnimalsByAdopterId(Long adopterId) {
+		return adoptionanimalService.findAdoptionAnimalsByAdopterId(adopterId);
+	}
+
+	public List<AdoptionAnimal> findAdoptionAnimalsByDonorId(Long donorId) {
+		return adoptionanimalService.findAdoptionAnimalsByDonorId(donorId);
+	}
 
 	public List<AdoptionAnimal> getAllAdoptionAnimals() {
 		return adoptionanimalService.getAllAdoptionAnimals();
