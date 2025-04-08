@@ -249,7 +249,7 @@ public class PetShare {
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + adoptionAnimal.getStatus());
 		adoptionAnimal.setStatus("Cancelada");
 		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
-		donateAnimal.setStatus("Em aberto");
+		donateAnimal.setStatus("Disponível");
 
 		updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 		updateAdoptionAnimal(id, adoptionAnimal);
