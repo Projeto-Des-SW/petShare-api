@@ -23,4 +23,6 @@ public interface DonateItemServiceInterface {
 
 	Page<DonateItem> findDonateItemPage(PageRequest pageRequest);
 
+	List<DonateItem> getAvailableDonations();
+
 }

@@ -44,4 +44,8 @@ public class Request {
     @OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")
 	private Post post;
+    
+    public void addReceivedQuantity(Double quantity) {
+    	this.receivedQuantity += quantity;
+    }
 }

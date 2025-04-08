@@ -11,4 +11,6 @@ import br.com.ufape.petshare.model.Request;
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
 	List<Request> findRequestsByUserId(Long userId);
+
+	List<Request> findByStatus(String string);
 }

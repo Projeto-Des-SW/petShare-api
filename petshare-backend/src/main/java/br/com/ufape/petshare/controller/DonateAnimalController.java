@@ -41,7 +41,7 @@ public class DonateAnimalController {
 	
 	@GetMapping("/available")
 	public ResponseEntity<List<DonateAnimalResponse>> getAvailableDonations() {
-		return ResponseEntity.status(HttpStatus.OK).body(facade.getAvailableDonations().stream().map(DonateAnimalResponse::new).toList());
+		return ResponseEntity.status(HttpStatus.OK).body(facade.getAvailableAnimalDonations().stream().map(DonateAnimalResponse::new).toList());
 	}
 
 	@GetMapping("/page")

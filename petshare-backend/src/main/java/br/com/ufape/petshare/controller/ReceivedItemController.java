@@ -56,6 +56,36 @@ public class ReceivedItemController {
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@PutMapping("/cancel/{id}")
+	public ResponseEntity<Void> cancelReceivedItem(@PathVariable("id") Long id) {
+		facade.cancelReceivedItem(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/refuse/{id}")
+	public ResponseEntity<Void> refuseReceivedItem(@PathVariable("id") Long id) {
+		facade.refuseReceivedItem(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-interest/{id}")
+	public ResponseEntity<Void> confirmInterestReceivedItem(@PathVariable("id") Long id) {
+		facade.confirmInterestReceivedItem(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-adoption/{id}")
+	public ResponseEntity<Void> confirmReceivedItem(@PathVariable("id") Long id) {
+		facade.confirmReceivedItem(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-receipt/{id}")
+	public ResponseEntity<Void> confirmReceiptReceivedItem(@PathVariable("id") Long id) {
+		facade.confirmReceiptReceivedItem(id);
+		return ResponseEntity.noContent().build();
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ReceivedItemResponse> getReceivedItemById(@PathVariable("id") Long id) {

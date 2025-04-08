@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +55,37 @@ public class AdoptionAnimalController {
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
-
+	
+	@PutMapping("/cancel/{id}")
+	public ResponseEntity<Void> cancelAdoptionAnimal(@PathVariable("id") Long id) {
+		facade.cancelAdoptionAnimal(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/refuse/{id}")
+	public ResponseEntity<Void> refuseAdoptionAnimal(@PathVariable("id") Long id) {
+		facade.refuseAdoptionAnimal(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-interest/{id}")
+	public ResponseEntity<Void> confirmInterestAdoptionAnimal(@PathVariable("id") Long id) {
+		facade.confirmInterestAdoptionAnimal(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-adoption/{id}")
+	public ResponseEntity<Void> confirmAdoptionAnimal(@PathVariable("id") Long id) {
+		facade.confirmAdoptionAnimal(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/confirm-receipt/{id}")
+	public ResponseEntity<Void> confirmReceiptAdoptionAnimal(@PathVariable("id") Long id) {
+		facade.confirmReceiptAdoptionAnimal(id);
+		return ResponseEntity.noContent().build();
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<AdoptionAnimalResponse> getAdoptionAnimalById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(new AdoptionAnimalResponse(facade.findAdoptionAnimalById(id)));

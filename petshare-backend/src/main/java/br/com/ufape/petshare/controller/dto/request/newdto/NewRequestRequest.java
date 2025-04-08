@@ -27,6 +27,6 @@ public class NewRequestRequest {
 	public Request toEntity() {
 		User user = new User();
 		user.setId(userId);
-		return new Request(null, (double) 0, quantity, "Em Aberto", LocalDate.now(), user, item.toEntity(), post.toEntity());
+		return new Request(null, (double) 0, quantity, "Em aberto", LocalDate.now(), user, item.toEntity(), post.toEntity());
 	}
 }

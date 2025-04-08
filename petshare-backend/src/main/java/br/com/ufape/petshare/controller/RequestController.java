@@ -38,6 +38,11 @@ public class RequestController {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(facade.getAllRequests().stream().map(RequestResponse::new).toList());
 	}
+	
+	@GetMapping("/open")
+	public ResponseEntity<List<RequestResponse>> getOpenRequests() {
+		return ResponseEntity.status(HttpStatus.OK).body(facade.getOpenRequests().stream().map(RequestResponse::new).toList());
+	}
 
 	@GetMapping("/page")
 	public ResponseEntity<Page<RequestResponse>> findPage(@RequestParam(defaultValue = "0") Integer page,
