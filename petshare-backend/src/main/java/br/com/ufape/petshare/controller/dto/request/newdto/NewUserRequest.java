@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.ufape.petshare.controller.dto.request.AddressRequest;
-import br.com.ufape.petshare.model.Login;
 import br.com.ufape.petshare.model.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -56,6 +55,6 @@ public class NewUserRequest {
     private AddressRequest address;
     
     public User toEntity() {
-		return new User(null, name, image, email, phone, status, bornDate, cpf, password, address.toEntity(), new Login(null, email, password));
+		return new User(null, name, image, email, phone, status, bornDate, cpf, password, address.toEntity());
 	}
 }
