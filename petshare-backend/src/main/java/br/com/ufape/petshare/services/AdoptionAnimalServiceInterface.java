@@ -14,6 +14,10 @@ public interface AdoptionAnimalServiceInterface {
 	AdoptionAnimal findAdoptionAnimalById(Long id);
 
 	List<AdoptionAnimal> getAllAdoptionAnimals();
+	
+	List<AdoptionAnimal> findAdoptionAnimalsByAdopterId(Long adopterId);
+	
+	List<AdoptionAnimal> findAdoptionAnimalsByDonorId(Long donorId);
 
 	AdoptionAnimal updateAdoptionAnimal(Long id, AdoptionAnimal adoptionAnimalDetails);
 

@@ -58,4 +58,29 @@ public class ReceivedItemService implements ReceivedItemServiceInterface {
 		}
 		receivedItemRepository.deleteById(id);
 	}
+
+	@Override
+	public List<ReceivedItem> findReceivedItemsByReceiverId(Long receiverId) {
+		return receivedItemRepository.findByReceiver_Id(receiverId);
+	}
+
+	@Override
+	public List<ReceivedItem> findReceivedItemsByDonateId(Long donateId) {
+		return receivedItemRepository.findByDonateItem_Id(donateId);
+	}
+
+	@Override
+	public List<ReceivedItem> findReceivedItemsByRequestId(Long requestId) {
+		return receivedItemRepository.findByRequest_Id(requestId);
+	}
+
+	@Override
+	public List<ReceivedItem> findReceivedItemsByDonateDonorId(Long donateDonorId) {
+		return receivedItemRepository.findByDonateItem_Donor_Id(donateDonorId);
+	}
+
+	@Override
+	public List<ReceivedItem> findReceivedItemsByRequestUserId(Long requestUserId) {
+		return receivedItemRepository.findByRequest_User_Id(requestUserId);
+	}
 }

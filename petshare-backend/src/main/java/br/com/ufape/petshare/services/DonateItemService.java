@@ -58,4 +58,9 @@ public class DonateItemService implements DonateItemServiceInterface {
 		}
 		donateItemRepository.deleteById(id);
 	}
+
+	@Override
+	public List<DonateItem> findDonateItemsByDonorId(Long donorId) {
+		return donateItemRepository.findByDonorId(donorId);
+	}
 }

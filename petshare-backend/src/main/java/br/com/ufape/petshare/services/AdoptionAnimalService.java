@@ -31,6 +31,16 @@ public class AdoptionAnimalService implements AdoptionAnimalServiceInterface {
 	}
 
 	@Override
+	public List<AdoptionAnimal> findAdoptionAnimalsByAdopterId(Long adopterId) {
+		return adoptionAnimalRepository.findByAdopter_Id(adopterId);
+	}
+
+	@Override
+	public List<AdoptionAnimal> findAdoptionAnimalsByDonorId(Long donorId) {
+		return adoptionAnimalRepository.findByDonateAnimal_Donor_Id(donorId);
+	}
+
+	@Override
 	public Page<AdoptionAnimal> findAdoptionAnimalPage(PageRequest pageRequest) {
 		return adoptionAnimalRepository.findAll(pageRequest);
 	}
@@ -58,4 +68,5 @@ public class AdoptionAnimalService implements AdoptionAnimalServiceInterface {
 		}
 		adoptionAnimalRepository.deleteById(id);
 	}
+
 }

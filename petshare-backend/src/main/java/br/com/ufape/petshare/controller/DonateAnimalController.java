@@ -66,6 +66,12 @@ public class DonateAnimalController {
 	public ResponseEntity<DonateAnimalResponse> getDonateAnimalById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(new DonateAnimalResponse(facade.findDonateAnimalById(id)));
 	}
+	
+	@GetMapping("/donor/{donorId}")
+	public ResponseEntity<List<DonateAnimalResponse>> getDonateAnimalsByDonorId(@PathVariable("donorId") Long donorId) {
+		return ResponseEntity.status(HttpStatus.OK)
+		.body(facade.findDonateAnimalsByDonorId(donorId).stream().map(DonateAnimalResponse::new).toList());
+	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<DonateAnimalResponse> updateDonateAnimal(@PathVariable("id") Long id, @Valid @RequestBody DonateAnimalUpdateRequest updatedObj) {

@@ -29,6 +29,11 @@ public class RequestService implements RequestServiceInterface {
 		return requestRepository.findById(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Request not found with ID = " + id));
 	}
+	
+	@Override
+	public List<Request> findRequestByUserId(Long userId) {
+		return requestRepository.findRequestsByUserId(userId);
+	}
 
 	@Override
 	public Page<Request> findRequestPage(PageRequest pageRequest) {

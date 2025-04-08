@@ -181,6 +181,10 @@ public class PetShare {
 	public DonateAnimal findDonateAnimalById(Long id) {
 		return donateanimalService.findDonateAnimalById(id);
 	}
+	
+	public List<DonateAnimal> findDonateAnimalsByDonorId(Long donorId) {
+		return donateanimalService.findDonateAnimalsByDonorId(donorId);
+	}
 
 	public List<DonateAnimal> getAllDonateAnimals() {
 		return donateanimalService.getAllDonateAnimals();
@@ -197,25 +201,35 @@ public class PetShare {
 	public Page<DonateAnimal> findDonateAnimalPage(PageRequest pageRequest) {
 		return donateanimalService.findDonateAnimalPage(pageRequest);
 	}
-	
+
 	public List<DonateAnimal> getAvailableDonations() {
-	    return donateanimalService.getAvailableDonations();
+		return donateanimalService.getAvailableDonations();
 	}
-	
+
 	/* ADOPTIONANIMAL METHODS */
 
 	public AdoptionAnimal saveAdoptionAnimal(AdoptionAnimal adoptionanimal) {
 		DonateAnimal donateAnimal = findDonateAnimalById(adoptionanimal.getDonateAnimal().getId());
-		if(!donateAnimal.getStatus().equals("Em aberto"))
+		if (!donateAnimal.getStatus().equals("Disponível"))
 			throw new InvalidStatusException("Animal indisponível para adoção");
-		donateAnimal.setStatus("Em andamento");
+		donateAnimal.setStatus("Reservada");
 		donateAnimal = updateDonateAnimal(donateAnimal.getId(), donateAnimal);
-		adoptionanimal.setDonateAnimal(donateAnimal); 
+		adoptionanimal.setDonateAnimal(donateAnimal);
 		return adoptionanimalService.saveAdoptionAnimal(adoptionanimal);
 	}
 
 	public AdoptionAnimal findAdoptionAnimalById(Long id) {
 		return adoptionanimalService.findAdoptionAnimalById(id);
+	}
+
+	public List<AdoptionAnimal> findAdoptionAnimalsByAdopterId(Long adopterId) {
+		findUserById(adopterId);
+		return adoptionanimalService.findAdoptionAnimalsByAdopterId(adopterId);
+	}
+
+	public List<AdoptionAnimal> findAdoptionAnimalsByDonorId(Long donorId) {
+		findUserById(donorId);
+		return adoptionanimalService.findAdoptionAnimalsByDonorId(donorId);
 	}
 
 	public List<AdoptionAnimal> getAllAdoptionAnimals() {
@@ -226,13 +240,30 @@ public class PetShare {
 		return adoptionanimalService.updateAdoptionAnimal(id, adoptionanimalDetails);
 	}
 
+	private List<String> adoptionsPossibleStatuses = List.of("Em interesse", "Em espera de confirmação de doação",
+			"Em espera de confirmação de recebimento", "Finalizada", "Cancelada");
+
+	public void cancelAdoptionAnimal(Long id) {
+		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
+		if (adoptionAnimal.getStatus().equals("Finalizada") || adoptionAnimal.getStatus().equals("Cancelada"))
+			throw new InvalidStatusException("Cancelamento não é possível, status: " + adoptionAnimal.getStatus());
+		adoptionAnimal.setStatus("Cancelada");
+		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
+		donateAnimal.setStatus("Em aberto");
+
+		updateDonateAnimal(donateAnimal.getId(), donateAnimal);
+		updateAdoptionAnimal(id, adoptionAnimal);
+	}
+
 	public void deleteAdoptionAnimal(Long id) {
 		adoptionanimalService.deleteAdoptionAnimal(id);
 	}
 
 	public Page<AdoptionAnimal> findAdoptionAnimalPage(PageRequest pageRequest) {
 		return adoptionanimalService.findAdoptionAnimalPage(pageRequest);
-	} /* RECEIVEDITEM METHODS */
+	}
+
+	/* RECEIVEDITEM METHODS */
 
 	public DonateItem saveDonateItem(DonateItem donateitem) {
 		return donateitemService.saveDonateItem(donateitem);
@@ -240,6 +271,11 @@ public class PetShare {
 
 	public DonateItem findDonateItemById(Long id) {
 		return donateitemService.findDonateItemById(id);
+	}
+
+	public List<DonateItem> findDonateItemsByDonorId(Long donorId) {
+		findUserById(donorId);
+		return donateitemService.findDonateItemsByDonorId(donorId);
 	}
 
 	public List<DonateItem> getAllDonateItems() {
@@ -258,7 +294,7 @@ public class PetShare {
 		return donateitemService.findDonateItemPage(pageRequest);
 	}
 
-	/* DONATEITEM METHODS */
+	/* RECEIVEDITEMS METHODS */
 
 	public ReceivedItem saveReceivedItem(ReceivedItem receiveditem) {
 		return receiveditemService.saveReceivedItem(receiveditem);
@@ -266,6 +302,31 @@ public class PetShare {
 
 	public ReceivedItem findReceivedItemById(Long id) {
 		return receiveditemService.findReceivedItemById(id);
+	}
+	
+	public List<ReceivedItem> findReceivedItemsByReceiverId(Long receiverId) {
+		findUserById(receiverId);
+		return receiveditemService.findReceivedItemsByReceiverId(receiverId);
+	}
+
+	public List<ReceivedItem> findReceivedItemsByDonateId(Long donateId) {
+		findDonateItemById(donateId);
+		return receiveditemService.findReceivedItemsByDonateId(donateId);
+	}
+
+	public List<ReceivedItem> findReceivedItemsByRequestId(Long requestId) {
+		findRequestById(requestId);
+		return receiveditemService.findReceivedItemsByRequestId(requestId);
+	}
+
+	public List<ReceivedItem> findReceivedItemsByDonateDonorId(Long donateDonorId) {
+		findUserById(donateDonorId);
+		return receiveditemService.findReceivedItemsByDonateDonorId(donateDonorId);
+	}
+
+	public List<ReceivedItem> findReceivedItemsByRequestUserId(Long requestUserId) {
+		findUserById(requestUserId);
+		return receiveditemService.findReceivedItemsByRequestUserId(requestUserId);
 	}
 
 	public List<ReceivedItem> getAllReceivedItems() {
@@ -292,6 +353,10 @@ public class PetShare {
 
 	public Request findRequestById(Long id) {
 		return requestService.findRequestById(id);
+	}
+	
+	public List<Request> findRequestByUserId(Long userId) {
+		return requestService.findRequestByUserId(userId);
 	}
 
 	public List<Request> getAllRequests() {

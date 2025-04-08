@@ -13,6 +13,8 @@ public interface DonateItemServiceInterface {
 
 	DonateItem findDonateItemById(Long id);
 
+	List<DonateItem> findDonateItemsByDonorId(Long donorId);
+
 	List<DonateItem> getAllDonateItems();
 
 	DonateItem updateDonateItem(Long id, DonateItem donateItemDetails);

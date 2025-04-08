@@ -62,6 +62,40 @@ public class ReceivedItemController {
 		return ResponseEntity.status(HttpStatus.OK).body(new ReceivedItemResponse(facade.findReceivedItemById(id)));
 	}
 
+	@GetMapping("/donate/{donateId}")
+	public ResponseEntity<List<ReceivedItemResponse>> getReceivedItemsByDonateId(
+			@PathVariable("donateId") Long donateId) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.findReceivedItemsByDonateId(donateId).stream().map(ReceivedItemResponse::new).toList());
+	}
+
+	@GetMapping("/request/{requestId}")
+	public ResponseEntity<List<ReceivedItemResponse>> getReceivedItemsByRequestId(
+			@PathVariable("requestId") Long requestId) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.findReceivedItemsByRequestId(requestId).stream().map(ReceivedItemResponse::new).toList());
+	}
+
+	@GetMapping("donate/donor/{donorId}")
+	public ResponseEntity<List<ReceivedItemResponse>> getReceivedItemsByDonateDonorId(
+			@PathVariable("donorId") Long donorId) {
+		return ResponseEntity.status(HttpStatus.OK).body(
+				facade.findReceivedItemsByDonateDonorId(donorId).stream().map(ReceivedItemResponse::new).toList());
+	}
+
+	@GetMapping("/request/user/{userId}")
+	public ResponseEntity<List<ReceivedItemResponse>> getReceivedItemsByDonorId(@PathVariable("userId") Long userId) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.findReceivedItemsByRequestUserId(userId).stream().map(ReceivedItemResponse::new).toList());
+	}
+
+	@GetMapping("receiver/{receiverId}")
+	public ResponseEntity<List<ReceivedItemResponse>> getReceivedItemsByReceiverId(
+			@PathVariable("receiverId") Long receiverId) {
+		return ResponseEntity.status(HttpStatus.OK).body(
+				facade.findReceivedItemsByReceiverId(receiverId).stream().map(ReceivedItemResponse::new).toList());
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<ReceivedItemResponse> updateReceivedItem(@PathVariable("id") Long id,
 			@Valid @RequestBody ReceivedItemUpdateRequest updatedObj) {
