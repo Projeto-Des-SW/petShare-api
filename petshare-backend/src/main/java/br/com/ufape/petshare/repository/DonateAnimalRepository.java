@@ -10,4 +10,6 @@ import br.com.ufape.petshare.model.DonateAnimal;
 @Repository
 public interface DonateAnimalRepository extends JpaRepository<DonateAnimal, Long> {
 	List<DonateAnimal> findByStatus(String status);
+
+	List<DonateAnimal> findByDonorId(Long donorId);
 }

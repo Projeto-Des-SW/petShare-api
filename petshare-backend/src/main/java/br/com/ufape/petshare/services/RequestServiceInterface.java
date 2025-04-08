@@ -12,6 +12,8 @@ public interface RequestServiceInterface {
 	Request saveRequest(Request request);
 
 	Request findRequestById(Long id);
+	
+	List<Request> findRequestByUserId(Long userId);
 
 	List<Request> getAllRequests();
 
