@@ -42,6 +42,6 @@ public class UserUpdateRequest {
     private AddressRequest address;
     
     public User toEntity() {
-		return new User(null, name, image, email, phone, status, bornDate, null, null, address.toEntity());
+		return new User(null, name, image, email, phone, status, bornDate, null, null, address.toEntity(), null);
 	}
 }

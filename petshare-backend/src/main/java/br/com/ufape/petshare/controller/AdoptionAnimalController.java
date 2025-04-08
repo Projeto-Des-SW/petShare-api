@@ -59,6 +59,18 @@ public class AdoptionAnimalController {
 	public ResponseEntity<AdoptionAnimalResponse> getAdoptionAnimalById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(new AdoptionAnimalResponse(facade.findAdoptionAnimalById(id)));
 	}
+	
+	@GetMapping("/donor/{donorId}")
+	public ResponseEntity<List<AdoptionAnimalResponse>> getAdoptionAnimalByDonorId(@PathVariable("donorId") Long donorId) {
+		return ResponseEntity.status(HttpStatus.OK)
+		.body(facade.findAdoptionAnimalsByDonorId(donorId).stream().map(AdoptionAnimalResponse::new).toList());
+	}
+	
+	@GetMapping("adopter/{adopterId}")
+	public ResponseEntity<List<AdoptionAnimalResponse>> getAdoptionAnimalByAdopterId(@PathVariable("adopterId") Long adopterId) {
+		return ResponseEntity.status(HttpStatus.OK)
+		.body(facade.findAdoptionAnimalsByAdopterId(adopterId).stream().map(AdoptionAnimalResponse::new).toList());
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteAdoptionAnimal(@PathVariable("id") Long id) {
