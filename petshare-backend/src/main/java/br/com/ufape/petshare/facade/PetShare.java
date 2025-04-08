@@ -15,7 +15,6 @@ import br.com.ufape.petshare.model.Item;
 import br.com.ufape.petshare.model.Post;
 import br.com.ufape.petshare.model.ReceivedItem;
 import br.com.ufape.petshare.model.Request;
-import br.com.ufape.petshare.model.TypeItem;
 import br.com.ufape.petshare.model.User;
 import br.com.ufape.petshare.services.AdoptionAnimalServiceInterface;
 import br.com.ufape.petshare.services.AnimalServiceInterface;
@@ -25,7 +24,6 @@ import br.com.ufape.petshare.services.ItemServiceInterface;
 import br.com.ufape.petshare.services.PostServiceInterface;
 import br.com.ufape.petshare.services.ReceivedItemServiceInterface;
 import br.com.ufape.petshare.services.RequestServiceInterface;
-import br.com.ufape.petshare.services.TypeItemServiceInterface;
 import br.com.ufape.petshare.services.UserServiceInterface;
 import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 
@@ -38,8 +36,6 @@ public class PetShare {
 	private AnimalServiceInterface animalService;
 	@Autowired
 	private ItemServiceInterface itemService;
-	@Autowired
-	private TypeItemServiceInterface typeitemService;
 	@Autowired
 	private PostServiceInterface postService;
 	@Autowired
@@ -124,31 +120,7 @@ public class PetShare {
 
 	public Page<Item> findItemPage(PageRequest pageRequest) {
 		return itemService.findItemPage(pageRequest);
-	} /* TYPEITEM METHODS */
-
-	public TypeItem saveTypeItem(TypeItem typeitem) {
-		return typeitemService.saveTypeItem(typeitem);
-	}
-
-	public TypeItem findTypeItemById(Long id) {
-		return typeitemService.findTypeItemById(id);
-	}
-
-	public List<TypeItem> getAllTypeItems() {
-		return typeitemService.getAllTypeItems();
-	}
-
-	public TypeItem updateTypeItem(Long id, TypeItem typeitemDetails) {
-		return typeitemService.updateTypeItem(id, typeitemDetails);
-	}
-
-	public void deleteTypeItem(Long id) {
-		typeitemService.deleteTypeItem(id);
-	}
-
-	public Page<TypeItem> findTypeItemPage(PageRequest pageRequest) {
-		return typeitemService.findTypeItemPage(pageRequest);
-	} /* POST METHODS */
+	}  /* POST METHODS */
 
 	public Post savePost(Post post) {
 		return postService.savePost(post);

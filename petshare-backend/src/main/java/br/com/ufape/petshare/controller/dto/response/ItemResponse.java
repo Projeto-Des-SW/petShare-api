@@ -14,7 +14,7 @@ public class ItemResponse {
     private String description;
     private String status;
     private String brand;
-    private TypeItemResponse typeItem;
+	private String category;
     
 	public ItemResponse(Item obj) {
 		this.id = obj.getId();
@@ -22,7 +22,7 @@ public class ItemResponse {
 		this.description = obj.getDescription();
 		this.status = obj.getStatus();
 		this.brand = obj.getBrand();
-		this.typeItem = new TypeItemResponse(obj.getTypeItem());
+		this.category = obj.getCategory();
 	}
 
 }
