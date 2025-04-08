@@ -23,6 +23,6 @@ public class NewAdoptionAnimalRequest {
     	 donateAnimal.setId(donateAnimalId);
     	 User user = new User();
     	 user.setId(userId);
-		return new AdoptionAnimal(null, LocalDate.now(), "Em Aberto", user, donateAnimal);
+		return new AdoptionAnimal(null, LocalDate.now(), "Em interesse", user, donateAnimal);
      }
 }

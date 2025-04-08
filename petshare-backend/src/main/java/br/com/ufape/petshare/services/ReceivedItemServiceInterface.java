@@ -13,6 +13,16 @@ public interface ReceivedItemServiceInterface {
 
 	ReceivedItem findReceivedItemById(Long id);
 
+	List<ReceivedItem> findReceivedItemsByReceiverId(Long receiverId);
+	
+	List<ReceivedItem> findReceivedItemsByDonateId(Long donateId);
+	
+	List<ReceivedItem> findReceivedItemsByRequestId(Long requestId);
+
+	List<ReceivedItem> findReceivedItemsByDonateDonorId(Long donateDonorId);
+	
+	List<ReceivedItem> findReceivedItemsByRequestUserId(Long requestUserId);
+
 	List<ReceivedItem> getAllReceivedItems();
 
 	ReceivedItem updateReceivedItem(Long id, ReceivedItem ReceivedItemDetails);
@@ -20,5 +30,4 @@ public interface ReceivedItemServiceInterface {
 	void deleteReceivedItem(Long id);
 
 	Page<ReceivedItem> findReceivedItemPage(PageRequest pageRequest);
-
 }

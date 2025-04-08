@@ -22,6 +22,6 @@ public class NewDonateAnimalRequest {
 	public DonateAnimal toEntity() {
 		User user = new User();
 		user.setId(userId);
-		return new DonateAnimal(null, LocalDate.now(), "Em aberto", animal.toEntity(), user, post.toEntity());
+		return new DonateAnimal(null, LocalDate.now(), "Disponível", animal.toEntity(), user, post.toEntity());
 	}
 }

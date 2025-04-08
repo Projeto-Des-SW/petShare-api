@@ -61,6 +61,12 @@ public class RequestController {
 	public ResponseEntity<RequestResponse> getRequestById(@PathVariable("id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(new RequestResponse(facade.findRequestById(id)));
 	}
+	
+	@GetMapping("/{userId}")
+	public ResponseEntity<List<RequestResponse>> getRequestByUserId(@PathVariable("userId") Long userId) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(facade.findRequestByUserId(userId).stream().map(RequestResponse::new).toList());
+	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<RequestResponse> updateRequest(@PathVariable("id") Long id,
