@@ -69,4 +69,13 @@ public class AdoptionAnimalService implements AdoptionAnimalServiceInterface {
 		adoptionAnimalRepository.deleteById(id);
 	}
 
+	@Override
+	public List<AdoptionAnimal> findAdoptionAnimalsByDonateId(Long donateId) {
+		return adoptionAnimalRepository.findByDonateAnimal_Id(donateId).stream()
+				.filter(x -> !x.getStatus().equals("Cancelada"))
+				.filter(x -> !x.getStatus().equals("Finalizada"))
+				.filter(x -> !x.getStatus().equals("Recusada"))
+				.toList();
+	}
+
 }
