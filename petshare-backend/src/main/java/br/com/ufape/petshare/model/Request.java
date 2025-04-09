@@ -1,6 +1,8 @@
 package br.com.ufape.petshare.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -45,7 +48,25 @@ public class Request {
 	@JoinColumn(name = "post_id")
 	private Post post;
     
+    @OneToMany(mappedBy = "request", orphanRemoval = true)
+	private List<ReceivedItem> receivedItems;
+    
+    public Request(Long id, Double receivedQuantity, Double quantity, String status, LocalDate date, User user,
+			Item item, Post post) {
+		super();
+		this.id = id;
+		this.receivedQuantity = receivedQuantity;
+		this.quantity = quantity;
+		this.status = status;
+		this.date = date;
+		this.user = user;
+		this.item = item;
+		this.post = post;
+		this.receivedItems = new ArrayList<>();
+	}
+    
     public void addReceivedQuantity(Double quantity) {
     	this.receivedQuantity += quantity;
     }
+
 }
