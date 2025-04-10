@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.ufape.petshare.services.exceptions.AuthenticationException;
+import br.com.ufape.petshare.services.exceptions.AuthorizationException;
 import br.com.ufape.petshare.services.exceptions.InvalidReceivedItemException;
 import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 import br.com.ufape.petshare.services.exceptions.ObjectNotFoundException;
@@ -72,6 +74,22 @@ public class ControllerExceptionHandler {
 			HttpServletRequest request) {
 		int httpStatus = HttpStatus.UNAUTHORIZED.value();
 		StandardError err = new StandardError(httpStatus, "Não autorizado", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(httpStatus).body(err);
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<StandardError> authenticationException(AuthenticationException e, HttpServletRequest request) {
+		int httpStatus = HttpStatus.UNAUTHORIZED.value();
+		StandardError err = new StandardError(httpStatus,
+				"Não autorizado", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(httpStatus).body(err);
+	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorizationException(AuthorizationException e, HttpServletRequest request) {
+		int httpStatus = HttpStatus.FORBIDDEN.value();
+		StandardError err = new StandardError(httpStatus,
+				"Não autorizado", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(httpStatus).body(err);
 	}
 

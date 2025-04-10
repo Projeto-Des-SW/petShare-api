@@ -21,4 +21,8 @@ public interface UserServiceInterface {
 
 	Page<User> findUserPage(PageRequest pageRequest);
 
+	User findUserByEmail(String email);
+
+	void updateUserPasswordByEmail(String email, String password);
+
 }
