@@ -15,7 +15,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                 "http://petshare-web-production.up.railway.app",
+                 "https://petshare-web-production.up.railway.app",
                             "http://localhost:3000"
                         )
                         .allowedHeaders("*")
