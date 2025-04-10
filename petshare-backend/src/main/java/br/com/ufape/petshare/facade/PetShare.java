@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.util.Streamable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.ufape.petshare.model.AdoptionAnimal;
@@ -18,6 +17,9 @@ import br.com.ufape.petshare.model.Post;
 import br.com.ufape.petshare.model.ReceivedItem;
 import br.com.ufape.petshare.model.Request;
 import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.security.AuthUser;
+import br.com.ufape.petshare.security.JWTUtils;
+import br.com.ufape.petshare.security.UserDetailsServiceImpl;
 import br.com.ufape.petshare.services.AdoptionAnimalServiceInterface;
 import br.com.ufape.petshare.services.AnimalServiceInterface;
 import br.com.ufape.petshare.services.DonateAnimalServiceInterface;
@@ -27,6 +29,8 @@ import br.com.ufape.petshare.services.PostServiceInterface;
 import br.com.ufape.petshare.services.ReceivedItemServiceInterface;
 import br.com.ufape.petshare.services.RequestServiceInterface;
 import br.com.ufape.petshare.services.UserServiceInterface;
+import br.com.ufape.petshare.services.exceptions.AuthenticationException;
+import br.com.ufape.petshare.services.exceptions.AuthorizationException;
 import br.com.ufape.petshare.services.exceptions.InvalidReceivedItemException;
 import br.com.ufape.petshare.services.exceptions.InvalidStatusException;
 
@@ -51,14 +55,50 @@ public class PetShare {
 	private ReceivedItemServiceInterface receiveditemService;
 	@Autowired
 	private RequestServiceInterface requestService;
+	@Autowired
+	private UserDetailsServiceImpl userDetailsServiceImpl;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private JWTUtils jwtUtils;
+	
+	/* AUTH METHODS */
+	
+	public User findLoggedUser() {
+		User logged = findUserByEmail(userDetailsServiceImpl.authenticated().getEmail());
+		if (logged == null)
+			throw new AuthenticationException("Usuário não autenticado");
+		return logged;
+	}
+	
+	public String generateLoginToken(AuthUser usuario) {
+		return jwtUtils.generateLoginToken(usuario);
+	}
+
+	public String recoverEmailByToken(String token) {
+		return jwtUtils.recoverEmailByToken(token);
+	}
+	
+	public void updatePassword(String password, String newPassword) {
+		User logged = findLoggedUser();
+		if (!passwordEncoder.matches(password, logged.getPassword()))
+			throw new AuthorizationException("Senha incorreta");
+		userService.updateUserPasswordByEmail(logged.getEmail(), passwordEncoder.encode(newPassword));
+		
+	}
 
 	/* USER METHODS */
 	public User saveUser(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userService.saveUser(user);
 	}
 
 	public User findUserById(Long id) {
 		return userService.findUserById(id);
+	}
+	
+	public User findUserByEmail(String email) {
+		return userService.findUserByEmail(email);
 	}
 
 	public List<User> getAllUsers() {
@@ -75,7 +115,9 @@ public class PetShare {
 
 	public Page<User> findUserPage(PageRequest pageRequest) {
 		return userService.findUserPage(pageRequest);
-	} /* ANIMAL METHODS */
+	}
+	
+	/* ANIMAL METHODS */
 
 	public Animal saveAnimal(Animal animal) {
 		return animalService.saveAnimal(animal);

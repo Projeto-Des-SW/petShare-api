@@ -30,6 +30,12 @@ public class UserService implements UserServiceInterface{
                 .orElseThrow(() -> new ObjectNotFoundException("User not found with ID = " + id));
     }
     
+    @Override
+	public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ObjectNotFoundException("User not found with email = " + email));
+    }
+    
 	@Override
     public Page<User> findUserPage(PageRequest pageRequest) {
 		return userRepository.findAll(pageRequest);
@@ -62,4 +68,11 @@ public class UserService implements UserServiceInterface{
             return userRepository.save(user);
         }).orElseThrow(() -> new ObjectNotFoundException("User not found with ID = " + id));
     }
+
+	@Override
+	public void updateUserPasswordByEmail(String email, String password) {
+		User user = findUserByEmail(email);
+		user.setPassword(password);
+		updateUser(user.getId(), user);
+	}
 }
