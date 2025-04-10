@@ -1,15 +1,15 @@
-# Usa a imagem do OpenJDK 17 para rodar o backend Java
-FROM openjdk:21-jdk-slim
-
-# Define o diretório de trabalho dentro do container
+# build c maven
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copia o JAR do backend para dentro do container (Ajuste Maven ou Gradle)
-COPY target/petshare-0.0.1-SNAPSHOT.jar app.jar
-# COPY build/libs/petshare-backend.jar app.jar  # Para Gradle
+# runtime
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/petshare-0.0.1-SNAPSHOT.jar app.jar
 
-# Expõe a porta do backend
 EXPOSE 8181
 
-# Comando para rodar o backend
 CMD ["java", "-jar", "app.jar"]

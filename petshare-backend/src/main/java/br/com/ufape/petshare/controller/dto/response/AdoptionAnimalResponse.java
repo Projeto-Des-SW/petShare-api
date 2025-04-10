@@ -22,7 +22,8 @@ public class AdoptionAnimalResponse {
 		this.date = obj.getDate();
 		this.status = obj.getStatus();
 		this.adopter = new UserResponse(obj.getAdopter());
-		this.donateAnimal = new DonateAnimalResponse(obj.getDonateAnimal());
+		if(obj.getDonateAnimal() != null)
+			this.donateAnimal = new DonateAnimalResponse(obj.getDonateAnimal());
 	}
 
 }

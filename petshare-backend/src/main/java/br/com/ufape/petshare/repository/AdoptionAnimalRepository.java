@@ -11,5 +11,6 @@ import br.com.ufape.petshare.model.AdoptionAnimal;
 public interface AdoptionAnimalRepository extends JpaRepository<AdoptionAnimal, Long> {
 	List<AdoptionAnimal> findByAdopter_Id(Long adopterId);
 	List<AdoptionAnimal> findByDonateAnimal_Donor_Id(Long donorId);
+	List<AdoptionAnimal> findByDonateAnimal_Id(Long donateId);
 	
 }

@@ -97,6 +97,12 @@ public class AdoptionAnimalController {
 		.body(facade.findAdoptionAnimalsByDonorId(donorId).stream().map(AdoptionAnimalResponse::new).toList());
 	}
 	
+	@GetMapping("/donate/{donateId}")
+	public ResponseEntity<List<AdoptionAnimalResponse>> getAdoptionAnimalByDonateId(@PathVariable("donateId") Long donateId) {
+		return ResponseEntity.status(HttpStatus.OK)
+		.body(facade.findAdoptionAnimalsByDonateId(donateId).stream().map(AdoptionAnimalResponse::new).toList());
+	}
+	
 	@GetMapping("adopter/{adopterId}")
 	public ResponseEntity<List<AdoptionAnimalResponse>> getAdoptionAnimalByAdopterId(@PathVariable("adopterId") Long adopterId) {
 		return ResponseEntity.status(HttpStatus.OK)

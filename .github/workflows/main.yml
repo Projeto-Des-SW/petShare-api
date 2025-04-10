@@ -1,0 +1,22 @@
+name: Teste Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Exibir mensagem
+        run: echo "Oi teste"
+
+      - name: Build da imagem
+        run: echo "aqui vai ser o local de build"
