@@ -42,7 +42,7 @@
 
 <h3><a href = "https://react.dev/">React</a></h3>
 <ul>
-   <li>Versão:  </li>
+   <li>Versão: 18.3.1  </li>
 </ul>
 
 <h1>Status do projeto:</h1>
