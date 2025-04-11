@@ -69,12 +69,6 @@ public class ReceivedItemController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping("/confirm-interest/{id}")
-	public ResponseEntity<Void> confirmInterestReceivedItem(@PathVariable("id") Long id) {
-		facade.confirmInterestReceivedItem(id);
-		return ResponseEntity.noContent().build();
-	}
-	
 	@PutMapping("/confirm-adoption/{id}")
 	public ResponseEntity<Void> confirmReceivedItem(@PathVariable("id") Long id) {
 		facade.confirmReceivedItem(id);
