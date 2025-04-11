@@ -102,9 +102,13 @@ public class PetShare {
 	public String uploadFile(MultipartFile file, String fileName) throws IOException {
 		return s3Service.uploadFile(file.getInputStream(), file.getSize(), fileName, file.getContentType());
 	}
-	
+
 	public String formatFileName(String prefix, String originalFilename) {
 		return s3Service.formatFileName(prefix, originalFilename);
+	}
+
+	public String deleteFile(String filename) {
+		return s3Service.deleteFile(filename);
 	}
 
 	/* USER METHODS */
@@ -130,6 +134,9 @@ public class PetShare {
 	}
 
 	public void deleteUser(Long id) {
+		User user = findUserById(id);
+		if (user.getImage() != null && !user.getImage().isBlank())
+			deleteFile(user.getImage());
 		userService.deleteUser(id);
 	}
 
@@ -232,6 +239,14 @@ public class PetShare {
 	}
 
 	public void deleteDonateAnimal(Long id) {
+		DonateAnimal donateAnimal = findDonateAnimalById(id);
+		List<String> postImages = donateAnimal.getPost().getImages();
+		if (postImages != null && !postImages.isEmpty()) {
+			for (String file : postImages) {
+				if (file != null && !file.isBlank())
+					deleteFile(file);
+			}
+		}
 		donateanimalService.deleteDonateAnimal(id);
 	}
 
@@ -368,6 +383,14 @@ public class PetShare {
 	}
 
 	public void deleteDonateItem(Long id) {
+		DonateItem donateItem = findDonateItemById(id);
+		List<String> postImages = donateItem.getPost().getImages();
+		if (postImages != null && !postImages.isEmpty()) {
+			for (String file : postImages) {
+				if (file != null && !file.isBlank())
+					deleteFile(file);
+			}
+		}
 		donateitemService.deleteDonateItem(id);
 	}
 
@@ -539,6 +562,14 @@ public class PetShare {
 	}
 
 	public void deleteRequest(Long id) {
+		Request request = findRequestById(id);
+		List<String> postImages = request.getPost().getImages();
+		if (postImages != null && !postImages.isEmpty()) {
+			for (String file : postImages) {
+				if (file != null && !file.isBlank())
+					deleteFile(file);
+			}
+		}
 		requestService.deleteRequest(id);
 	}
 
