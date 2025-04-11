@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ufape.petshare.controller.dto.request.AuthRequest;
 import br.com.ufape.petshare.controller.dto.request.PasswordUpdateRequest;
+import br.com.ufape.petshare.controller.dto.response.UserResponse;
 import br.com.ufape.petshare.facade.PetShare;
+import br.com.ufape.petshare.model.User;
 import br.com.ufape.petshare.security.AuthUser;
 import jakarta.validation.Valid;
 
@@ -28,20 +30,22 @@ public class AuthController {
 	private PetShare facade;
 
 	@PostMapping("/login")
-	public ResponseEntity<Void> login(@Valid @RequestBody AuthRequest data) {
-		UsernamePasswordAuthenticationToken userNamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
+	public ResponseEntity<UserResponse> login(@Valid @RequestBody AuthRequest data) {
+		UsernamePasswordAuthenticationToken userNamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(),
+				data.getPassword());
 		Authentication auth = this.authenticationManager.authenticate(userNamePassword);
 		String token = facade.generateLoginToken((AuthUser) auth.getPrincipal());
-		return ResponseEntity.ok().header("Authorization", "Bearer " + token).header("access-control-expose-headers", "Authorization").build();
+		User user = facade.findUserByEmail(data.getEmail());
+		return ResponseEntity.ok().header("Authorization", "Bearer " + token)
+				.header("access-control-expose-headers", "Authorization").body(new UserResponse(user));
 	}
-	
-	
+
 	@PatchMapping("/newpassword")
 	public ResponseEntity<String> updatePassword(@Valid @RequestBody PasswordUpdateRequest data) {
 		facade.updatePassword(data.password, data.newPassword);
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@PostMapping("/user/current")
 	public Authentication getCurrentUser() {
 		return SecurityContextHolder.getContext().getAuthentication();
