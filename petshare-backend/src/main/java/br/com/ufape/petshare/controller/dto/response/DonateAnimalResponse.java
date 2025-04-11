@@ -24,6 +24,8 @@ public class DonateAnimalResponse {
 	private UserResponse donor;
 
 	private AdoptionAnimalResponse adoptionAnimal;
+	
+	private PostResponse post;
 
 	public DonateAnimalResponse(DonateAnimal obj) {
 		this.id = obj.getId();
@@ -31,6 +33,7 @@ public class DonateAnimalResponse {
 		this.status = obj.getStatus().name();
 		this.animal = new AnimalResponse(obj.getAnimal());
 		this.donor = new UserResponse(obj.getDonor());
+		this.post = new PostResponse(obj.getPost());
 		List<AdoptionAnimal> adoptions = obj.getAdoptionAnimals().stream()
 				.filter(x -> !x.getStatus().equals(AdoptionStatus.CANCELADA)).filter(x -> !x.getStatus().equals(AdoptionStatus.FINALIZADA))
 				.filter(x -> !x.getStatus().equals(DonationStatus.RECUSADO)).toList();
