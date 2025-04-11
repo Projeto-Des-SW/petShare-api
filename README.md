@@ -8,12 +8,12 @@
    <a href = "https://github.com/GuiSysLima">Guilherme Rutemberg - Software Developer</a>
 </h3>
 
-<h1>URL do Projeto</h1>
+<!-- <h1>URL do Projeto</h1>
 <h4>
    <h4>Acessos para testes:</h4>
-   <h4>login: admin@admin.teste   | senha: admin123</h4>
-   <h4>login: fiscal@fiscal.teste | senha: fiscal123</h4>
-</h4>
+   <h4>login: admin@admin.teste   | senha: xxxxx</h4>
+   <h4>login: a@a | senha: xxxxx</h4>
+</h4> -->
 
 <h1>Sobre o Projeto:</h1>
 
