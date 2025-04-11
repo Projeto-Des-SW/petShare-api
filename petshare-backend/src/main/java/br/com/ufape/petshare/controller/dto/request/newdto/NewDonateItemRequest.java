@@ -25,7 +25,6 @@ public class NewDonateItemRequest {
 	public DonateItem toEntity() {
 		User user = new User();
 		user.setId(userId);
-		String status = "Disponível";
 		return new DonateItem(null, LocalDate.now(), ItemDonationStatus.DISPONIVEL, quantity, item.toEntity(), user, post.toEntity());
 	}
 }

@@ -276,6 +276,8 @@ public class PetShare {
 		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_INTERESSE)
 			throw new InvalidStatusException("Confirmação não é possível, status: " + adoptionAnimal.getStatus());
 		adoptionAnimal.setStatus(AdoptionStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO);
+		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
+		donateAnimal.setStatus(DonationStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO);
 		updateAdoptionAnimal(id, adoptionAnimal);
 	}
 
@@ -428,6 +430,8 @@ public class PetShare {
 		if (!receivedItem.getStatus().equals(ReceivedItemStatus.EM_INTERESSE))
 			throw new InvalidStatusException("Confirmação não é possível, status: " + receivedItem.getStatus());
 		receivedItem.setStatus(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_RECEBIMENTO);
+		DonateItem donateItem = receivedItem.getDonateItem();
+		donateItem.setStatus(ItemDonationStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO);
 		updateReceivedItem(id, receivedItem);
 	}
 	
