@@ -67,7 +67,7 @@ public class RequestController {
 		return ResponseEntity.status(HttpStatus.OK).body(new RequestResponse(facade.findRequestById(id)));
 	}
 	
-	@GetMapping("/{userId}")
+	@GetMapping("user/{userId}")
 	public ResponseEntity<List<RequestResponse>> getRequestByUserId(@PathVariable("userId") Long userId) {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(facade.findRequestByUserId(userId).stream().map(RequestResponse::new).toList());

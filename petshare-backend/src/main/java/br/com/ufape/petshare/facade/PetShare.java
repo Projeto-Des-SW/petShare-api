@@ -521,6 +521,7 @@ public class PetShare {
 	}
 
 	public List<Request> findRequestByUserId(Long userId) {
+		findUserById(userId);
 		return requestService.findRequestByUserId(userId);
 	}
 
