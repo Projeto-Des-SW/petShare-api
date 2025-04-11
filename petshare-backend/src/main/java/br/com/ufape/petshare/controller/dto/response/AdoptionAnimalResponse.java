@@ -20,7 +20,7 @@ public class AdoptionAnimalResponse {
 	public AdoptionAnimalResponse(AdoptionAnimal obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().name();
 		this.adopter = new UserResponse(obj.getAdopter());
 		if(obj.getDonateAnimal() != null)
 			this.donateAnimal = new DonateAnimalResponse(obj.getDonateAnimal());

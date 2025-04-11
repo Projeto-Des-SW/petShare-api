@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ufape.petshare.model.enums.RequestStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,7 +36,11 @@ public class Request {
     private Long id;
     private Double receivedQuantity;
     private Double quantity;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
+    
+    
     private LocalDate date;
 
     @ManyToOne
@@ -51,7 +58,7 @@ public class Request {
     @OneToMany(mappedBy = "request", orphanRemoval = true)
 	private List<ReceivedItem> receivedItems;
     
-    public Request(Long id, Double receivedQuantity, Double quantity, String status, LocalDate date, User user,
+    public Request(Long id, Double receivedQuantity, Double quantity, RequestStatus status, LocalDate date, User user,
 			Item item, Post post) {
 		super();
 		this.id = id;

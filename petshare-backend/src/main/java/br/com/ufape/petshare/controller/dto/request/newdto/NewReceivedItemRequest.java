@@ -7,6 +7,8 @@ import br.com.ufape.petshare.model.Post;
 import br.com.ufape.petshare.model.ReceivedItem;
 import br.com.ufape.petshare.model.Request;
 import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.model.enums.ItemDonationStatus;
+import br.com.ufape.petshare.model.enums.ReceivedItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +37,10 @@ public class NewReceivedItemRequest {
 			request = new Request(requestItemId, 0d, 0d, null, null, null, null, null);
 			Post post = new Post();
 			post.setText("Doação referente a requisição " + request.getId());
-			donate = new DonateItem(null, LocalDate.now(), "Reservado", quantity, null , user, post);
+			donate = new DonateItem(null, LocalDate.now(), ItemDonationStatus.RESERVADO, quantity, null , user, post);
 		} else {
 			donate = new DonateItem(donateItemId, null, null, 0d, null, null, null);
 		}
-		return new ReceivedItem(null, LocalDate.now(),  "Em interesse", quantity, request, donate, user);
+		return new ReceivedItem(null, LocalDate.now(),  ReceivedItemStatus.EM_INTERESSE, quantity, request, donate, user);
 	}
 }

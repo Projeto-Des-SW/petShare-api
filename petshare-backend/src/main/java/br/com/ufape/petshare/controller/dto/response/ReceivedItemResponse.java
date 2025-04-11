@@ -25,7 +25,7 @@ public class ReceivedItemResponse {
 	public ReceivedItemResponse(ReceivedItem obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().name();
 		this.quantity = obj.getQuantity();
 		if(obj.getDonateItem() != null)
 			this.donateItem = new DonateItemResponse(obj.getDonateItem());

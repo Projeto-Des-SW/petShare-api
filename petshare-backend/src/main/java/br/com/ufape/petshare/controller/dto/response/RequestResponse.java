@@ -31,7 +31,7 @@ public class RequestResponse {
 		this.id = obj.getId();
 		this.receivedQuantity = obj.getReceivedQuantity();
 		this.quantity = obj.getQuantity();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().name();
 		this.date = obj.getDate();
 		this.user = new UserResponse(obj.getUser());
 		this.item = new ItemResponse(obj.getItem());

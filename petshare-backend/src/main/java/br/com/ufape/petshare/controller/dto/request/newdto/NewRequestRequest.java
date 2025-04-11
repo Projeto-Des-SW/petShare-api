@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import br.com.ufape.petshare.controller.dto.request.PostRequest;
 import br.com.ufape.petshare.model.Request;
 import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.model.enums.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,6 @@ public class NewRequestRequest {
 	public Request toEntity() {
 		User user = new User();
 		user.setId(userId);
-		return new Request(null, (double) 0, quantity, "Em aberto", LocalDate.now(), user, item.toEntity(), post.toEntity());
+		return new Request(null, (double) 0, quantity, RequestStatus.EM_ABERTO, LocalDate.now(), user, item.toEntity(), post.toEntity());
 	}
 }

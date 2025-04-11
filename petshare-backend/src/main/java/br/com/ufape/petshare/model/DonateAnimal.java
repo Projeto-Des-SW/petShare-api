@@ -4,8 +4,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ufape.petshare.model.enums.DonationStatus;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,7 +36,10 @@ public class DonateAnimal {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDate date;
-	private String status;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private DonationStatus status;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "animal_id")
@@ -49,7 +56,7 @@ public class DonateAnimal {
 	@OneToMany(mappedBy = "donateAnimal", orphanRemoval = true)
 	private List<AdoptionAnimal> adoptionAnimals;
 
-	public DonateAnimal(Long id, LocalDate date, String status, Animal animal, User donor, Post post) {
+	public DonateAnimal(Long id, LocalDate date, DonationStatus status, Animal animal, User donor, Post post) {
 		super();
 		this.id = id;
 		this.date = date;

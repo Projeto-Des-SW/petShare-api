@@ -2,7 +2,10 @@ package br.com.ufape.petshare.model;
 
 import java.time.LocalDate;
 
+import br.com.ufape.petshare.model.enums.AdoptionStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,7 +31,9 @@ public class AdoptionAnimal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private AdoptionStatus status;
     @ManyToOne
     @JoinColumn(name = "adopter_id")
     private User adopter;

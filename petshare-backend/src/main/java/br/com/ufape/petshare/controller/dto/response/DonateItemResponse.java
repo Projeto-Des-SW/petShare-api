@@ -29,7 +29,7 @@ public class DonateItemResponse {
 	public DonateItemResponse(DonateItem obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().getLabel();
 		this.quantity = obj.getQuantity();
 		this.item = new ItemResponse(obj.getItem());
 		this.user = new UserResponse(obj.getDonor());

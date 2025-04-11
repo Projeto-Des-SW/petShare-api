@@ -5,6 +5,8 @@ import java.util.List;
 
 import br.com.ufape.petshare.model.AdoptionAnimal;
 import br.com.ufape.petshare.model.DonateAnimal;
+import br.com.ufape.petshare.model.enums.AdoptionStatus;
+import br.com.ufape.petshare.model.enums.DonationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,12 +28,12 @@ public class DonateAnimalResponse {
 	public DonateAnimalResponse(DonateAnimal obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().getLabel();
 		this.animal = new AnimalResponse(obj.getAnimal());
 		this.donor = new UserResponse(obj.getDonor());
 		List<AdoptionAnimal> adoptions = obj.getAdoptionAnimals().stream()
-				.filter(x -> !x.getStatus().equals("Cancelada")).filter(x -> !x.getStatus().equals("Finalizada"))
-				.filter(x -> !x.getStatus().equals("Recusada")).toList();
+				.filter(x -> !x.getStatus().equals(AdoptionStatus.CANCELADA)).filter(x -> !x.getStatus().equals(AdoptionStatus.FINALIZADA))
+				.filter(x -> !x.getStatus().equals(DonationStatus.RECUSADO)).toList();
 		if (!adoptions.isEmpty()) {
 			AdoptionAnimal adoption = adoptions.getFirst();
 			adoption.setDonateAnimal(null);
