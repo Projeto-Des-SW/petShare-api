@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import br.com.ufape.petshare.model.enums.Profile;
 import br.com.ufape.petshare.security.SecurityFilter;
 
 @Configuration
@@ -38,6 +39,7 @@ public class SecurityConfig {
 	private static final String[] PUBLIC_MATCHERS_GET = { "/donateitems/available", "/donateanimals/available", "/requests/open", "/api-doc/**" };
 	private static final String[] PUBLIC_MATCHERS_POST = { "/auth/login", "/users", "/auth/forgot/**",
 			"/auth/recoverPassword/**" };
+	private static final String[] ADMIN_MATCHERS = {"/s3/**"};
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,6 +49,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 						.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+						.requestMatchers(ADMIN_MATCHERS).hasRole("ADMIN")
 						.requestMatchers(PUBLIC_MATCHERS).permitAll()
 						.anyRequest().authenticated()
 					)
