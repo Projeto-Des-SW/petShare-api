@@ -35,7 +35,7 @@ public class SecurityConfig {
 	private String allowedOrigins;
 	
 	private static final String[] PUBLIC_MATCHERS = {};
-	private static final String[] PUBLIC_MATCHERS_GET = { "/donateitems/available", "/donateanimals/available", "/api-doc/**" };
+	private static final String[] PUBLIC_MATCHERS_GET = { "/donateitems/available", "/donateanimals/available", "/requests/open", "/api-doc/**" };
 	private static final String[] PUBLIC_MATCHERS_POST = { "/auth/login", "/users", "/auth/forgot/**",
 			"/auth/recoverPassword/**" };
 
