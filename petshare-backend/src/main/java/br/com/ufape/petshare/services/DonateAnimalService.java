@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ufape.petshare.model.DonateAnimal;
+import br.com.ufape.petshare.model.enums.DonationStatus;
 import br.com.ufape.petshare.repository.DonateAnimalRepository;
 import br.com.ufape.petshare.services.exceptions.ObjectNotFoundException;
 
@@ -59,8 +60,9 @@ public class DonateAnimalService implements DonateAnimalServiceInterface {
 		donateAnimalRepository.deleteById(id);
 	}
 
+	@Override
 	public List<DonateAnimal> getAvailableDonations() {
-	    return donateAnimalRepository.findByStatus("Disponível");
+	    return donateAnimalRepository.findByStatus(DonationStatus.DISPONIVEL);
 	}
 
 	@Override

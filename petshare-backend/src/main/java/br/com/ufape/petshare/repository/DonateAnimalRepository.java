@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.ufape.petshare.model.DonateAnimal;
+import br.com.ufape.petshare.model.enums.DonationStatus;
 
 @Repository
 public interface DonateAnimalRepository extends JpaRepository<DonateAnimal, Long> {
-	List<DonateAnimal> findByStatus(String status);
+	List<DonateAnimal> findByStatus(DonationStatus status);
 
 	List<DonateAnimal> findByDonorId(Long donorId);
 }
