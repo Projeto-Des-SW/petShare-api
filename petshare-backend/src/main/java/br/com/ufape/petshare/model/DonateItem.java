@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ufape.petshare.model.enums.ItemDonationStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +36,11 @@ public class DonateItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDate date;
-	private String status;
+
+	@Enumerated(EnumType.STRING)
+	private ItemDonationStatus status;
+	
+	
 	private Double quantity;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -51,7 +58,7 @@ public class DonateItem {
 	@OneToMany(mappedBy = "donateItem", orphanRemoval = true)
 	private List<ReceivedItem> receivedItems;
 
-	public DonateItem(Long id, LocalDate date, String status, Double quantity, Item item, User donor, Post post) {
+	public DonateItem(Long id, LocalDate date, ItemDonationStatus status, Double quantity, Item item, User donor, Post post) {
 		super();
 		this.id = id;
 		this.date = date;

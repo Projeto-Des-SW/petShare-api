@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import br.com.ufape.petshare.controller.dto.request.PostRequest;
 import br.com.ufape.petshare.model.DonateAnimal;
 import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.model.enums.DonationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,6 @@ public class NewDonateAnimalRequest {
 	public DonateAnimal toEntity() {
 		User user = new User();
 		user.setId(userId);
-		return new DonateAnimal(null, LocalDate.now(), "Disponível", animal.toEntity(), user, post.toEntity());
+		return new DonateAnimal(null, LocalDate.now(), DonationStatus.DISPONIVEL, animal.toEntity(), user, post.toEntity());
 	}
 }

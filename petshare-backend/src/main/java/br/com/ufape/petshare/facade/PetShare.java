@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.facade;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ import br.com.ufape.petshare.model.Post;
 import br.com.ufape.petshare.model.ReceivedItem;
 import br.com.ufape.petshare.model.Request;
 import br.com.ufape.petshare.model.User;
+import br.com.ufape.petshare.model.enums.AdoptionStatus;
+import br.com.ufape.petshare.model.enums.DonationStatus;
+import br.com.ufape.petshare.model.enums.ItemDonationStatus;
+import br.com.ufape.petshare.model.enums.ReceivedItemStatus;
+import br.com.ufape.petshare.model.enums.RequestStatus;
 import br.com.ufape.petshare.security.AuthUser;
 import br.com.ufape.petshare.security.JWTUtils;
 import br.com.ufape.petshare.security.UserDetailsServiceImpl;
@@ -227,25 +233,25 @@ public class PetShare {
 
 	public AdoptionAnimal saveAdoptionAnimal(AdoptionAnimal adoptionanimal) {
 		DonateAnimal donateAnimal = findDonateAnimalById(adoptionanimal.getDonateAnimal().getId());
-		if (!donateAnimal.getStatus().equals("Disponível"))
+		if (donateAnimal.getStatus() != DonationStatus.DISPONIVEL)
 			throw new InvalidStatusException("Animal indisponível para adoção");
-		donateAnimal.setStatus("Reservada");
+		donateAnimal.setStatus(DonationStatus.APROVADO);
 		donateAnimal = updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 		adoptionanimal.setDonateAnimal(donateAnimal);
 		return adoptionanimalService.saveAdoptionAnimal(adoptionanimal);
 	}
 
-	private List<String> adoptionsPossibleStatuses = List.of("Em interesse", "Em espera de confirmação de doação",
-			"Em espera de confirmação de recebimento", "Finalizada", "Cancelada", "Recusada");
-
 	public void cancelAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (adoptionAnimal.getStatus().equals("Finalizada") || adoptionAnimal.getStatus().equals("Cancelada")
-				|| adoptionAnimal.getStatus().equals("Recusada"))
+		if (EnumSet.of(
+			AdoptionStatus.FINALIZADA,
+			AdoptionStatus.CANCELADA,
+			AdoptionStatus.RECUSADA
+		).contains(adoptionAnimal.getStatus()))
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + adoptionAnimal.getStatus());
-		adoptionAnimal.setStatus("Cancelada");
+		adoptionAnimal.setStatus(AdoptionStatus.CANCELADA);
 		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
-		donateAnimal.setStatus("Disponível");
+		donateAnimal.setStatus(DonationStatus.DISPONIVEL);
 
 		updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 		updateAdoptionAnimal(id, adoptionAnimal);
@@ -253,12 +259,17 @@ public class PetShare {
 
 	public void refuseAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (adoptionAnimal.getStatus().equals("Finalizada") || adoptionAnimal.getStatus().equals("Cancelada")
-				|| adoptionAnimal.getStatus().equals("Recusada"))
+		if (EnumSet.of(
+			AdoptionStatus.FINALIZADA,
+			AdoptionStatus.CANCELADA,
+			AdoptionStatus.RECUSADA
+		).contains(adoptionAnimal.getStatus())){
 			throw new InvalidStatusException("Recusa não é possível, status: " + adoptionAnimal.getStatus());
-		adoptionAnimal.setStatus("Recusada");
+		}
+			
+		adoptionAnimal.setStatus(AdoptionStatus.RECUSADA);
 		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
-		donateAnimal.setStatus("Disponível");
+		donateAnimal.setStatus(DonationStatus.DISPONIVEL);
 
 		updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 		updateAdoptionAnimal(id, adoptionAnimal);
@@ -266,28 +277,28 @@ public class PetShare {
 
 	public void confirmInterestAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (!adoptionAnimal.getStatus().equals("Em interesse"))
+		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_INTERESSE)
 			throw new InvalidStatusException("Confirmação não é possível, status: " + adoptionAnimal.getStatus());
-		adoptionAnimal.setStatus("Em espera de confirmação de doação");
+		adoptionAnimal.setStatus(AdoptionStatus.EM_ESPERA_CONFIRMACAO_DOACAO);
 		updateAdoptionAnimal(id, adoptionAnimal);
 	}
 
 	public void confirmAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (!adoptionAnimal.getStatus().equals("Em espera de confirmação de doação"))
+		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_ESPERA_CONFIRMACAO_DOACAO)
 			throw new InvalidStatusException("Confirmação não é possível, status: " + adoptionAnimal.getStatus());
-		adoptionAnimal.setStatus("Em espera de confirmação de recebimento");
+		adoptionAnimal.setStatus(AdoptionStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO);
 		updateAdoptionAnimal(id, adoptionAnimal);
 	}
 
 	public void confirmReceiptAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (!adoptionAnimal.getStatus().equals("Em espera de confirmação de recebimento"))
+		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO)
 			throw new InvalidStatusException("Confirmação não é possível, status: " + adoptionAnimal.getStatus());
-		adoptionAnimal.setStatus("Finalizada");
+		adoptionAnimal.setStatus(AdoptionStatus.FINALIZADA);
 
 		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
-		donateAnimal.setStatus("Adotado");
+		donateAnimal.setStatus(DonationStatus.ADOTADO);
 		updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 
 		updateAdoptionAnimal(id, adoptionAnimal);
@@ -374,7 +385,7 @@ public class PetShare {
 		if(donateItem.getId() != null) {
 			donateItem = findDonateItemById(donateItem.getId());
 			receivedItem.setQuantity(donateItem.getQuantity());
-			donateItem.setStatus("Reservado");
+			donateItem.setStatus(ItemDonationStatus.RESERVADO);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		} else {
@@ -388,15 +399,18 @@ public class PetShare {
 	
 	public void cancelReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (receivedItem.getStatus().equals("Finalizado") || receivedItem.getStatus().equals("Cancelado")
-				|| receivedItem.getStatus().equals("Recusado"))
+		if (EnumSet.of(
+			ItemDonationStatus.RECEBIDO,
+			ItemDonationStatus.CANCELADO,
+			ItemDonationStatus.INDISPONIVEL
+		).contains(receivedItem.getStatus()))
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + receivedItem.getStatus());
-		receivedItem.setStatus("Cancelado");
+		receivedItem.setStatus(ReceivedItemStatus.CANCELADO);
 		
 		DonateItem donateItem = receivedItem.getDonateItem();
 		
 		if(donateItem != null) { 
-			donateItem.setStatus("Disponível");
+			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		}
@@ -406,15 +420,18 @@ public class PetShare {
 
 	public void refuseReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (receivedItem.getStatus().equals("Finalizado") || receivedItem.getStatus().equals("Cancelado")
-				|| receivedItem.getStatus().equals("Recusado"))
+		if (EnumSet.of(
+			ReceivedItemStatus.FINALIZADO,
+			ReceivedItemStatus.CANCELADO,
+			ReceivedItemStatus.RECUSADO
+		).contains(receivedItem.getStatus()))
 			throw new InvalidStatusException("Recusa não é possível, status: " + receivedItem.getStatus());
-		receivedItem.setStatus("Recusado");
+		receivedItem.setStatus(ReceivedItemStatus.RECUSADO);
 		
 		DonateItem donateItem = receivedItem.getDonateItem();
 		
 		if(donateItem != null) { 
-			donateItem.setStatus("Disponível");
+			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		}
@@ -424,30 +441,30 @@ public class PetShare {
 	
 	public void confirmInterestReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (!receivedItem.getStatus().equals("Em interesse"))
+		if (!receivedItem.getStatus().equals(ReceivedItemStatus.EM_INTERESSE))
 			throw new InvalidStatusException("Confirmação não é possível, status: " + receivedItem.getStatus());
-		receivedItem.setStatus("Em espera de confirmação de doação");
+		receivedItem.setStatus(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_DOACAO);
 		updateReceivedItem(id, receivedItem);
 	}
 	
 	public void confirmReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (!receivedItem.getStatus().equals("Em espera de confirmação de doação"))
+		if (!receivedItem.getStatus().equals(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_DOACAO))
 			throw new InvalidStatusException("Confirmação não é possível, status: " + receivedItem.getStatus());
-		receivedItem.setStatus("Em espera de confirmação de recebimento");
+		receivedItem.setStatus(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_RECEBIMENTO);
 		updateReceivedItem(id, receivedItem);
 	}
 	
 	public void confirmReceiptReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (!receivedItem.getStatus().equals("Em espera de confirmação de recebimento"))
+		if (!receivedItem.getStatus().equals(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_RECEBIMENTO))
 			throw new InvalidStatusException("Confirmação não é possível, status: " + receivedItem.getStatus());
-		receivedItem.setStatus("Finalizado");
+		receivedItem.setStatus(ReceivedItemStatus.FINALIZADO);
 
 		DonateItem donateItem = receivedItem.getDonateItem();
 		
 		if(donateItem != null) { 
-			donateItem.setStatus("Indisponível");
+			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		}
@@ -457,7 +474,7 @@ public class PetShare {
 		if(request != null) {
 			request.addReceivedQuantity(receivedItem.getQuantity());
 			if(request.getQuantity() >= request.getReceivedQuantity())
-				request.setStatus("Finalizada");
+				request.setStatus(RequestStatus.FINALIZADA);
 			request = updateRequest(request.getId(), request);
 			receivedItem.setRequest(request);
 		}
