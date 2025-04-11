@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.ufape.petshare.model.Request;
+import br.com.ufape.petshare.model.enums.RequestStatus;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
 	List<Request> findRequestsByUserId(Long userId);
 
-	List<Request> findByStatus(String string);
+	List<Request> findByStatus(RequestStatus string);
 }

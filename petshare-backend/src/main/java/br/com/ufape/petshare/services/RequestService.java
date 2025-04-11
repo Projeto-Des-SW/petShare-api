@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ufape.petshare.model.Request;
+import br.com.ufape.petshare.model.enums.RequestStatus;
 import br.com.ufape.petshare.repository.RequestRepository;
 import br.com.ufape.petshare.services.exceptions.ObjectNotFoundException;
 
@@ -32,7 +33,7 @@ public class RequestService implements RequestServiceInterface {
 
 	@Override
 	public List<Request> getOpenRequests() {
-		return requestRepository.findByStatus("Em aberto");
+		return requestRepository.findByStatus(RequestStatus.EM_ABERTO);
 	}
 
 	@Override
