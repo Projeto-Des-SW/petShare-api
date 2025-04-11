@@ -68,11 +68,6 @@ public class AdoptionAnimalController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping("/confirm-interest/{id}")
-	public ResponseEntity<Void> confirmInterestAdoptionAnimal(@PathVariable("id") Long id) {
-		facade.confirmInterestAdoptionAnimal(id);
-		return ResponseEntity.noContent().build();
-	}
 	
 	@PutMapping("/confirm-adoption/{id}")
 	public ResponseEntity<Void> confirmAdoptionAnimal(@PathVariable("id") Long id) {
