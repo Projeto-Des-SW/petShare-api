@@ -28,7 +28,7 @@ public class DonateAnimalResponse {
 	public DonateAnimalResponse(DonateAnimal obj) {
 		this.id = obj.getId();
 		this.date = obj.getDate();
-		this.status = obj.getStatus().getLabel();
+		this.status = obj.getStatus().name();
 		this.animal = new AnimalResponse(obj.getAnimal());
 		this.donor = new UserResponse(obj.getDonor());
 		List<AdoptionAnimal> adoptions = obj.getAdoptionAnimals().stream()
