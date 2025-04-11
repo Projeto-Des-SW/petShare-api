@@ -1,6 +1,8 @@
 package br.com.ufape.petshare.facade;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -405,26 +407,37 @@ public class PetShare {
 		DonateItem donateItem = receivedItem.getDonateItem();
 		if (request == null && donateItem == null)
 			throw new InvalidReceivedItemException("O recebimento precisa de uma requisição ou doação vinculada");
-
-		if (donateItem.getId() != null) {
+		// Estou recebendo
+		if (donateItem != null) {
 			donateItem = findDonateItemById(donateItem.getId());
+			receivedItem.setReceiver(findLoggedUser());
 			receivedItem.setQuantity(donateItem.getQuantity());
 			donateItem.setStatus(ItemDonationStatus.RESERVADO);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
-		} else {
-			request = findRequestById(receivedItem.getRequest().getId());
-			donateItem.setItem(request.getItem());
-			receivedItem.setDonateItem(saveDonateItem(donateItem));
-			System.out.println(receivedItem.getDonateItem().getItem());
 		}
+		// estou doando
+		if (request != null) {
+			request = findRequestById(request.getId());
+			Post post = new Post();
+			post.setText("Doação referente a solicitação de  " + request.getUser().getName() + ":"
+					+ request.getQuantity() + "-" + request.getItem().getName());
+			post.setImages(new ArrayList<>(request.getPost().getImages()));
+			donateItem = new DonateItem(null, LocalDate.now(), ItemDonationStatus.RESERVADO, receivedItem.getQuantity(),
+					request.getItem(), findLoggedUser(), post);
+			donateItem = saveDonateItem(donateItem);
+			receivedItem.setDonateItem(donateItem);
+			receivedItem.setStatus(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_RECEBIMENTO);
+			receivedItem.setReceiver(request.getUser());
+		}
+
 		return receiveditemService.saveReceivedItem(receivedItem);
 	}
 
 	public void cancelReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (EnumSet.of(ItemDonationStatus.RECEBIDO, ItemDonationStatus.CANCELADO, ItemDonationStatus.INDISPONIVEL)
-				.contains(receivedItem.getStatus()))
+		if (EnumSet.of(ItemDonationStatus.RECEBIDO, ItemDonationStatus.CANCELADO, ItemDonationStatus.INDISPONIVEL,
+				ItemDonationStatus.RESERVADO).contains(receivedItem.getStatus()))
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + receivedItem.getStatus());
 		receivedItem.setStatus(ReceivedItemStatus.CANCELADO);
 
@@ -475,7 +488,7 @@ public class PetShare {
 		DonateItem donateItem = receivedItem.getDonateItem();
 
 		if (donateItem != null) {
-			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
+			donateItem.setStatus(ItemDonationStatus.RECEBIDO);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		}
@@ -484,7 +497,7 @@ public class PetShare {
 
 		if (request != null) {
 			request.addReceivedQuantity(receivedItem.getQuantity());
-			if (request.getQuantity() >= request.getReceivedQuantity())
+			if (request.getQuantity() <= receivedItem.getQuantity())
 				request.setStatus(RequestStatus.FINALIZADA);
 			request = updateRequest(request.getId(), request);
 			receivedItem.setRequest(request);
