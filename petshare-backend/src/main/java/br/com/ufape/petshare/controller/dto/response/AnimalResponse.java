@@ -31,7 +31,7 @@ public class AnimalResponse {
 		this.observations = obj.getObservations();
 		this.medicalNotes = obj.getMedicalNotes();
 		this.sex = obj.getSex();
-		this.size = obj.getSex();
+		this.size = obj.getSize();
 		this.category = obj.getCategory();
 	}
 
