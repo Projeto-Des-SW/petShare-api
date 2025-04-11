@@ -6,6 +6,7 @@ public enum ItemDonationStatus {
     INDISPONIVEL("Indisponível"),
     CANCELADO("Cancelado"),
     RESERVADO("Reservado"),
+    EM_ESPERA_CONFIRMACAO_RECEBIMENTO("Em espera confirmação recebimento"),
     RECEBIDO("Recebido"),;
 
     private final String label;
