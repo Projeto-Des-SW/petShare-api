@@ -1,6 +1,8 @@
 package br.com.ufape.petshare.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufape.petshare.controller.dto.request.newdto.NewRequestRequest;
@@ -33,6 +37,8 @@ public class RequestController {
 	@Autowired
 	private PetShare facade;
 
+	private static String imagePrefix = "REQUESTITEM";
+	
 	@GetMapping
 	public ResponseEntity<List<RequestResponse>> getAllRequests() {
 		return ResponseEntity.status(HttpStatus.OK)
@@ -55,10 +61,23 @@ public class RequestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createRequest(@Valid @RequestBody NewRequestRequest obj) {
-		Request createdObj = facade.saveRequest(obj.toEntity());
+	public ResponseEntity<Void> createRequest(@Valid @RequestPart NewRequestRequest obj,
+			@RequestPart("images") List<MultipartFile> images) throws IOException {
+		List<String> filenames = new ArrayList<>();
+		if (images != null) {
+			images.forEach(x -> filenames.add(facade.formatFileName(imagePrefix, x.getOriginalFilename())));
+		}
+		
+		Request createdObj = obj.toEntity();
+		createdObj.getPost().setImages(filenames);
+		createdObj = facade.saveRequest(createdObj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdObj.getId())
 				.toUri();
+		if (images != null) {
+			for (int i = 0; i < images.size(); i++) {
+				facade.uploadFile(images.get(i), filenames.get(i));
+			}
+		}
 		return ResponseEntity.created(uri).build();
 	}
 
