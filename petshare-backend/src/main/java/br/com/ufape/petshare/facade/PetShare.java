@@ -1,5 +1,6 @@
 package br.com.ufape.petshare.facade;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.ufape.petshare.model.AdoptionAnimal;
 import br.com.ufape.petshare.model.Animal;
@@ -34,6 +36,7 @@ import br.com.ufape.petshare.services.ItemServiceInterface;
 import br.com.ufape.petshare.services.PostServiceInterface;
 import br.com.ufape.petshare.services.ReceivedItemServiceInterface;
 import br.com.ufape.petshare.services.RequestServiceInterface;
+import br.com.ufape.petshare.services.S3Service;
 import br.com.ufape.petshare.services.UserServiceInterface;
 import br.com.ufape.petshare.services.exceptions.AuthenticationException;
 import br.com.ufape.petshare.services.exceptions.AuthorizationException;
@@ -67,16 +70,18 @@ public class PetShare {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private JWTUtils jwtUtils;
-	
+	@Autowired
+	private S3Service s3Service;
+
 	/* AUTH METHODS */
-	
+
 	public User findLoggedUser() {
 		User logged = findUserByEmail(userDetailsServiceImpl.authenticated().getEmail());
 		if (logged == null)
 			throw new AuthenticationException("Usuário não autenticado");
 		return logged;
 	}
-	
+
 	public String generateLoginToken(AuthUser usuario) {
 		return jwtUtils.generateLoginToken(usuario);
 	}
@@ -84,13 +89,22 @@ public class PetShare {
 	public String recoverEmailByToken(String token) {
 		return jwtUtils.recoverEmailByToken(token);
 	}
-	
+
 	public void updatePassword(String password, String newPassword) {
 		User logged = findLoggedUser();
 		if (!passwordEncoder.matches(password, logged.getPassword()))
 			throw new AuthorizationException("Senha incorreta");
 		userService.updateUserPasswordByEmail(logged.getEmail(), passwordEncoder.encode(newPassword));
-		
+	}
+
+	/* S3 METHODS */
+
+	public String uploadFile(MultipartFile file, String fileName) throws IOException {
+		return s3Service.uploadFile(file.getInputStream(), file.getSize(), fileName, file.getContentType());
+	}
+	
+	public String formatFileName(String prefix, String originalFilename) {
+		return s3Service.formatFileName(prefix, originalFilename);
 	}
 
 	/* USER METHODS */
@@ -102,7 +116,7 @@ public class PetShare {
 	public User findUserById(Long id) {
 		return userService.findUserById(id);
 	}
-	
+
 	public User findUserByEmail(String email) {
 		return userService.findUserByEmail(email);
 	}
@@ -122,7 +136,7 @@ public class PetShare {
 	public Page<User> findUserPage(PageRequest pageRequest) {
 		return userService.findUserPage(pageRequest);
 	}
-	
+
 	/* ANIMAL METHODS */
 
 	public Animal saveAnimal(Animal animal) {
@@ -235,7 +249,7 @@ public class PetShare {
 		DonateAnimal donateAnimal = findDonateAnimalById(adoptionanimal.getDonateAnimal().getId());
 		if (donateAnimal.getStatus() != DonationStatus.DISPONIVEL)
 			throw new InvalidStatusException("Animal indisponível para adoção");
-		
+
 		donateAnimal.setStatus(DonationStatus.EM_INTERESSE);
 		donateAnimal = updateDonateAnimal(donateAnimal.getId(), donateAnimal);
 		adoptionanimal.setDonateAnimal(donateAnimal);
@@ -244,11 +258,8 @@ public class PetShare {
 
 	public void cancelAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (EnumSet.of(
-			AdoptionStatus.FINALIZADA,
-			AdoptionStatus.CANCELADA,
-			AdoptionStatus.RECUSADA
-		).contains(adoptionAnimal.getStatus()))
+		if (EnumSet.of(AdoptionStatus.FINALIZADA, AdoptionStatus.CANCELADA, AdoptionStatus.RECUSADA)
+				.contains(adoptionAnimal.getStatus()))
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + adoptionAnimal.getStatus());
 		adoptionAnimal.setStatus(AdoptionStatus.CANCELADA);
 		DonateAnimal donateAnimal = adoptionAnimal.getDonateAnimal();
@@ -260,7 +271,7 @@ public class PetShare {
 
 	public void refuseAdoptionAnimal(Long id) {
 		AdoptionAnimal adoptionAnimal = findAdoptionAnimalById(id);
-		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_INTERESSE){
+		if (adoptionAnimal.getStatus() != AdoptionStatus.EM_INTERESSE) {
 			throw new InvalidStatusException("Recusa não é possível, status: " + adoptionAnimal.getStatus());
 		}
 		adoptionAnimal.setStatus(AdoptionStatus.RECUSADA);
@@ -307,7 +318,7 @@ public class PetShare {
 		findUserById(donorId);
 		return adoptionanimalService.findAdoptionAnimalsByDonorId(donorId);
 	}
-	
+
 	public List<AdoptionAnimal> findAdoptionAnimalsByDonateId(Long donateId) {
 		findDonateAnimalById(donateId);
 		return adoptionanimalService.findAdoptionAnimalsByDonateId(donateId);
@@ -369,10 +380,10 @@ public class PetShare {
 	public ReceivedItem saveReceivedItem(ReceivedItem receivedItem) {
 		Request request = receivedItem.getRequest();
 		DonateItem donateItem = receivedItem.getDonateItem();
-		if(request == null && donateItem == null)
+		if (request == null && donateItem == null)
 			throw new InvalidReceivedItemException("O recebimento precisa de uma requisição ou doação vinculada");
-		
-		if(donateItem.getId() != null) {
+
+		if (donateItem.getId() != null) {
 			donateItem = findDonateItemById(donateItem.getId());
 			receivedItem.setQuantity(donateItem.getQuantity());
 			donateItem.setStatus(ItemDonationStatus.RESERVADO);
@@ -386,20 +397,17 @@ public class PetShare {
 		}
 		return receiveditemService.saveReceivedItem(receivedItem);
 	}
-	
+
 	public void cancelReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (EnumSet.of(
-			ItemDonationStatus.RECEBIDO,
-			ItemDonationStatus.CANCELADO,
-			ItemDonationStatus.INDISPONIVEL
-		).contains(receivedItem.getStatus()))
+		if (EnumSet.of(ItemDonationStatus.RECEBIDO, ItemDonationStatus.CANCELADO, ItemDonationStatus.INDISPONIVEL)
+				.contains(receivedItem.getStatus()))
 			throw new InvalidStatusException("Cancelamento não é possível, status: " + receivedItem.getStatus());
 		receivedItem.setStatus(ReceivedItemStatus.CANCELADO);
-		
+
 		DonateItem donateItem = receivedItem.getDonateItem();
-		
-		if(donateItem != null) { 
+
+		if (donateItem != null) {
 			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
@@ -410,13 +418,13 @@ public class PetShare {
 
 	public void refuseReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
-		if (receivedItem.getStatus() !=  ReceivedItemStatus.EM_INTERESSE)
+		if (receivedItem.getStatus() != ReceivedItemStatus.EM_INTERESSE)
 			throw new InvalidStatusException("Recusa não é possível, status: " + receivedItem.getStatus());
 		receivedItem.setStatus(ReceivedItemStatus.RECUSADO);
-		
+
 		DonateItem donateItem = receivedItem.getDonateItem();
-		
-		if(donateItem != null) { 
+
+		if (donateItem != null) {
 			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
@@ -424,7 +432,7 @@ public class PetShare {
 
 		updateReceivedItem(id, receivedItem);
 	}
-	
+
 	public void confirmReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
 		if (!receivedItem.getStatus().equals(ReceivedItemStatus.EM_INTERESSE))
@@ -434,7 +442,7 @@ public class PetShare {
 		donateItem.setStatus(ItemDonationStatus.EM_ESPERA_CONFIRMACAO_RECEBIMENTO);
 		updateReceivedItem(id, receivedItem);
 	}
-	
+
 	public void confirmReceiptReceivedItem(Long id) {
 		ReceivedItem receivedItem = findReceivedItemById(id);
 		if (!receivedItem.getStatus().equals(ReceivedItemStatus.ESPERANDO_CONFIRMACAO_RECEBIMENTO))
@@ -442,18 +450,18 @@ public class PetShare {
 		receivedItem.setStatus(ReceivedItemStatus.FINALIZADO);
 
 		DonateItem donateItem = receivedItem.getDonateItem();
-		
-		if(donateItem != null) { 
+
+		if (donateItem != null) {
 			donateItem.setStatus(ItemDonationStatus.DISPONIVEL);
 			donateItem = updateDonateItem(donateItem.getId(), donateItem);
 			receivedItem.setDonateItem(donateItem);
 		}
-		
+
 		Request request = receivedItem.getRequest();
-		
-		if(request != null) {
+
+		if (request != null) {
 			request.addReceivedQuantity(receivedItem.getQuantity());
-			if(request.getQuantity() >= request.getReceivedQuantity())
+			if (request.getQuantity() >= request.getReceivedQuantity())
 				request.setStatus(RequestStatus.FINALIZADA);
 			request = updateRequest(request.getId(), request);
 			receivedItem.setRequest(request);
@@ -461,7 +469,7 @@ public class PetShare {
 
 		updateReceivedItem(id, receivedItem);
 	}
-	
+
 	public ReceivedItem findReceivedItemById(Long id) {
 		return receiveditemService.findReceivedItemById(id);
 	}
