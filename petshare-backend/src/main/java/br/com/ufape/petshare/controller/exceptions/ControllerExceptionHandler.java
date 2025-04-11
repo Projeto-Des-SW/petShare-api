@@ -64,7 +64,7 @@ public class ControllerExceptionHandler {
 	public ResponseEntity<StandardError> badCredentialsException(BadCredentialsException e,
 			HttpServletRequest request) {
 		int httpStatus = HttpStatus.UNAUTHORIZED.value();
-		StandardError err = new StandardError(httpStatus, "Não autorizado", "CPF e/ou senha incorreto/s ",
+		StandardError err = new StandardError(httpStatus, "Não autorizado", "E-mail e/ou senha incorreto/s ",
 				request.getRequestURI());
 		return ResponseEntity.status(httpStatus).body(err);
 	}
