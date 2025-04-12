@@ -87,6 +87,10 @@ public class PetShare {
 	public String generateLoginToken(AuthUser usuario) {
 		return jwtUtils.generateLoginToken(usuario);
 	}
+	
+	public String generateLoginToken(String email) {
+		return jwtUtils.generateLoginToken(email);
+	}
 
 	public String recoverEmailByToken(String token) {
 		return jwtUtils.recoverEmailByToken(token);

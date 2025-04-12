@@ -18,6 +18,7 @@ import br.com.ufape.petshare.controller.dto.response.UserResponse;
 import br.com.ufape.petshare.facade.PetShare;
 import br.com.ufape.petshare.model.User;
 import br.com.ufape.petshare.security.AuthUser;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -38,6 +39,15 @@ public class AuthController {
 		User user = facade.findUserByEmail(data.getEmail());
 		return ResponseEntity.ok().header("Authorization", "Bearer " + token)
 				.header("access-control-expose-headers", "Authorization").body(new UserResponse(user));
+	}
+	
+	@PostMapping("/refresh_token")
+	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
+		User user = facade.findLoggedUser();
+		String token = facade.generateLoginToken(user.getEmail());
+		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
+		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("/newpassword")
