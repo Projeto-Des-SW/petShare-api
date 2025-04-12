@@ -13,6 +13,9 @@
 <h4>
    <h4>Acessos para testes:</h4>
    <h4>login: teste@uol.com.br   | senha: testeadmin</h4>
+
+   <h3>Web: https://petshare-web-production.up.railway.app</h3>
+   <h3>API: https://petshare-api-production.up.railway.app</h3>
 </h4>
 
 <h1>Sobre o Projeto:</h1>
