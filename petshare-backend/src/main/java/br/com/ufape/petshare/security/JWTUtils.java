@@ -42,6 +42,18 @@ public class JWTUtils {
 		}
 	}
 	
+	public String generateLoginToken(String username) {
+		try {
+			Algorithm algorithm = Algorithm.HMAC256(secret);
+			String token = JWT.create().withIssuer(projectIssuer).withSubject(username)
+					.withExpiresAt(new Date(System.currentTimeMillis() + expiration)).sign(algorithm);
+			return token;
+
+		} catch (JWTCreationException exception) {
+			throw new RuntimeException("Error while generating token ", exception);
+		}
+	}
+	
 	public String generatePasswordRecoveryToken(String username, String password) {
 		Algorithm algorithm = Algorithm.HMAC256(secret);
 		return JWT.create().withIssuer(projectIssuer).withSubject(username + ">ZZh$~B344" + password)
